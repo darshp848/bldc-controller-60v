@@ -1,0 +1,316 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "8389d72d-e15f-5f6c-986a-3533667306b2")
+	(paper "A4")
+	(title_block
+		(title "better-md80 - 60 V MD80-compatible motor controller")
+		(date "2026-09-28")
+		(rev "A")
+		(company "better-md80")
+	)
+	(lib_symbols)
+	(sheet
+		(at 30.48 40.64)
+		(size 60.96 20.32)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "782db7ed-bdd4-54a7-8f47-aed702c5dcfa")
+		(property "Sheetname" "Power input, protection, bulk capacitance"
+			(at 30.48 39.9284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power_input.kicad_sch"
+			(at 30.48 61.5484 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "better-md80"
+				(path "/8389d72d-e15f-5f6c-986a-3533667306b2"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 106.68 40.64)
+		(size 60.96 20.32)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "2e2ba3c9-f1bb-52dd-9d72-aff8ac9f047e")
+		(property "Sheetname" "Auxiliary supplies: 60V->12V->5V->3.3V"
+			(at 106.68 39.9284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "regulators.kicad_sch"
+			(at 106.68 61.5484 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "better-md80"
+				(path "/8389d72d-e15f-5f6c-986a-3533667306b2"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 182.88 40.64)
+		(size 60.96 20.32)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "ff6b1fce-46c4-570a-b2e6-d0ca4008a8e6")
+		(property "Sheetname" "Three-phase bridge, shunts, motor pads"
+			(at 182.88 39.9284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power_stage.kicad_sch"
+			(at 182.88 61.5484 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "better-md80"
+				(path "/8389d72d-e15f-5f6c-986a-3533667306b2"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 259.08 40.64)
+		(size 60.96 20.32)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "090160dc-4659-577d-b44a-f2aa86e6f696")
+		(property "Sheetname" "DRV8353S gate driver and current-sense amplifiers"
+			(at 259.08 39.9284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "gate_driver.kicad_sch"
+			(at 259.08 61.5484 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "better-md80"
+				(path "/8389d72d-e15f-5f6c-986a-3533667306b2"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 30.48 81.28)
+		(size 60.96 20.32)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "e25acfb1-0469-5fdc-b767-18232041b6d4")
+		(property "Sheetname" "STM32G474 MCU, clock, debug, status LEDs"
+			(at 30.48 80.5684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "mcu.kicad_sch"
+			(at 30.48 102.1884 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "better-md80"
+				(path "/8389d72d-e15f-5f6c-986a-3533667306b2"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 106.68 81.28)
+		(size 60.96 20.32)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "4eb7cc94-686c-5ae3-a8d5-737095406497")
+		(property "Sheetname" "CAN-FD, onboard encoder, AUX encoder ports, motor thermistor"
+			(at 106.68 80.5684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "comms_sensors.kicad_sch"
+			(at 106.68 102.1884 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "better-md80"
+				(path "/8389d72d-e15f-5f6c-986a-3533667306b2"
+					(page "7")
+				)
+			)
+		)
+	)
+	(text "better-md80: MD80 v3.0 form-factor BLDC controller for 48 V nominal / 60 V max buses."
+		(exclude_from_sim no)
+		(at 30.48 160 0)
+		(effects
+			(font
+				(size 2 2)
+			)
+			(justify left)
+		)
+		(uuid "25e4b777-890d-5eed-921d-b44dc592fa96")
+	)
+	(text "Voltage-limiting parts of the original (gate driver, bus caps, regulators, TVS) replaced with 100 V-class parts."
+		(exclude_from_sim no)
+		(at 30.48 166 0)
+		(effects
+			(font
+				(size 2 2)
+			)
+			(justify left)
+		)
+		(uuid "92643b83-6cd5-582f-ac2c-b94817894dae")
+	)
+	(text "Connectivity uses global labels: every net name is identical on every sheet."
+		(exclude_from_sim no)
+		(at 30.48 172 0)
+		(effects
+			(font
+				(size 2 2)
+			)
+			(justify left)
+		)
+		(uuid "84feedb5-72c0-5424-841d-8eef007f27a9")
+	)
+	(text "See ../docs/ for architecture, BOM, thermal/layout and firmware notes."
+		(exclude_from_sim no)
+		(at 30.48 178 0)
+		(effects
+			(font
+				(size 2 2)
+			)
+			(justify left)
+		)
+		(uuid "e137a40c-39e7-52b7-a70e-a5a78861e5c8")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

@@ -1,0 +1,14 @@
+(version 1)
+
+# 60 V bus: IPC-2221B B2 (external, uncoated, 51-100 V) asks 0.6 mm, B4 (coated) 0.13 mm.
+# Target 0.5 mm on outer layers between HV nets and everything else; conformal coat the
+# power area if you go tighter. Fine-pitch driver/MOSFET pins are exempt (package limited).
+(rule "HV outer spacing"
+	(layer outer)
+	(condition "A.NetClass == 'HV_60V' && B.NetClass != 'HV_60V' && !A.memberOfFootprint('U4') && !A.memberOfFootprint('U1') && !A.memberOfFootprint('Q*')")
+	(constraint clearance (min 0.5mm)))
+
+(rule "HV inner spacing"
+	(layer inner)
+	(condition "A.NetClass == 'HV_60V' && B.NetClass != 'HV_60V'")
+	(constraint clearance (min 0.25mm)))

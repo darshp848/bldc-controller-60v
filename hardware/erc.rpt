@@ -1,0 +1,17 @@
+ERC report (2026-09-27T23:41:47-0500, Encoding UTF8)
+
+***** Sheet /
+
+***** Sheet /Power input, protection, bulk capacitance/
+
+***** Sheet /Auxiliary supplies: 60V->12V->5V->3.3V/
+
+***** Sheet /Three-phase bridge, shunts, motor pads/
+
+***** Sheet /DRV8353S gate driver and current-sense amplifiers/
+
+***** Sheet /STM32G474 MCU, clock, debug, status LEDs/
+
+***** Sheet /CAN-FD, onboard encoder, AUX encoder ports, motor thermistor/
+
+ ** ERC messages: 0  Errors 0  Warnings 0

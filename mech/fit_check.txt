@@ -1,0 +1,38 @@
+J1     pad 1   STEP ( -21.98,  10.00) d=1.07   ours d=1.07   offset 0.000 mm
+J1     pad 2   STEP ( -21.98,   7.00) d=1.07   ours d=1.07   offset 0.000 mm
+J1     pad 3   STEP ( -21.98,   4.00) d=1.07   ours d=1.07   offset 0.000 mm
+J1     pad 4   STEP ( -18.98,  10.00) d=1.07   ours d=1.07   offset 0.000 mm
+J1     pad 5   STEP ( -18.98,   7.00) d=1.07   ours d=1.07   offset 0.000 mm
+J1     pad 6   STEP ( -18.98,   4.00) d=1.07   ours d=1.07   offset 0.000 mm
+J10    pad 1   STEP (  -5.80, -24.80) d=1.90   ours d=1.90   offset 0.000 mm
+J11    pad 1   STEP (   0.00, -25.00) d=1.90   ours d=1.90   offset 0.000 mm
+J12    pad 1   STEP (   5.80, -24.80) d=1.90   ours d=1.90   offset 0.000 mm
+J2     pad 1   STEP ( -21.98,  -4.00) d=1.07   ours d=1.07   offset 0.000 mm
+J2     pad 2   STEP ( -21.98,  -7.00) d=1.07   ours d=1.07   offset 0.000 mm
+J2     pad 3   STEP ( -21.98, -10.00) d=1.07   ours d=1.07   offset 0.000 mm
+J2     pad 4   STEP ( -18.98,  -4.00) d=1.07   ours d=1.07   offset 0.000 mm
+J2     pad 5   STEP ( -18.98,  -7.00) d=1.07   ours d=1.07   offset 0.000 mm
+J2     pad 6   STEP ( -18.98, -10.00) d=1.07   ours d=1.07   offset 0.000 mm
+J3     pad 1   STEP (   3.15,  21.00) d=0.50   ours d=0.50   offset 0.000 mm
+J3     pad 2   STEP (   1.90,  21.00) d=0.50   ours d=0.50   offset 0.000 mm
+J3     pad 3   STEP (   0.65,  21.00) d=0.50   ours d=0.50   offset 0.000 mm
+J3     pad 4   STEP (  -0.60,  21.00) d=0.50   ours d=0.50   offset 0.000 mm
+J3     pad 5   STEP (  -1.85,  21.00) d=0.50   ours d=0.50   offset 0.000 mm
+J3     pad 6   STEP (  -3.10,  21.00) d=0.50   ours d=0.50   offset 0.000 mm
+J4     pad 1   STEP (  20.50,  -2.60) d=0.50   ours d=0.50   offset 0.000 mm
+J4     pad 2   STEP (  20.50,  -1.35) d=0.50   ours d=0.50   offset 0.000 mm
+J4     pad 3   STEP (  20.50,  -0.10) d=0.50   ours d=0.50   offset 0.000 mm
+J4     pad 4   STEP (  20.50,   1.15) d=0.50   ours d=0.50   offset 0.000 mm
+J4     pad 5   STEP (  20.50,   2.40) d=0.50   ours d=0.50   offset 0.000 mm
+J4     pad 6   STEP (  20.50,   3.65) d=0.50   ours d=0.50   offset 0.000 mm
+J4     pad 7   STEP (  20.50,   4.90) d=0.50   ours d=0.50   offset 0.000 mm
+J4     pad 8   STEP (  20.50,   6.15) d=0.50   ours d=0.50   offset 0.000 mm
+J5     pad 1   STEP (  15.43, -19.35) d=0.80   ours d=0.80   offset 0.000 mm
+J5     pad 2   STEP (  15.43, -21.05) d=0.80   ours d=0.80   offset 0.000 mm
+MECH1  pad     STEP (  15.50,  15.50) d=3.20   ours d=3.20   offset 0.000 mm
+MECH1  pad     STEP (  15.50, -15.50) d=3.20   ours d=3.20   offset 0.000 mm
+MECH1  pad     STEP ( -15.50,  15.50) d=3.20   ours d=3.20   offset 0.000 mm
+MECH1  pad     STEP ( -15.50, -15.50) d=3.20   ours d=3.20   offset 0.000 mm
+MECH1  pad     STEP ( -26.30,   7.00) d=3.00   ours d=3.00   offset 0.000 mm
+holes checked: 36, worst position error: 0.000 mm
+note: the non-circular Micro-Fit peg cut-out at (-26.3, -7.0) is modelled as a 3.0 mm hole

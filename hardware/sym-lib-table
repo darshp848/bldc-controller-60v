@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "better_md80")(type "KiCad")(uri "${KIPRJMOD}/lib/better_md80.kicad_sym")(options "")(descr "better-md80 project symbols"))
+)
