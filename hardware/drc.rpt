@@ -1,16 +1,12 @@
 ** Drc report for better-md80.kicad_pcb **
-** Created on 2026-09-28T08:56:51 **
+** Created on 2026-09-28T08:57:25 **
 ** Report includes: Errors **
 
-** Found 2 DRC violations **
+** Found 1 DRC violations **
 [courtyards_overlap]: Courtyards overlap
     Rule: board setup constraints courtyard; error
     @(153.1500 mm, 79.0000 mm): Footprint J3
     @(150.0000 mm, 100.0000 mm): Footprint MECH1
-[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
-    Local override; error
-    @(176.1114 mm, 108.6525 mm): Zone 'GND bottom' [GND] on B.Cu, priority 0
-    @(151.9000 mm, 79.0000 mm): PTH pad 2 [GND] of J3
 
 ** Found 0 unconnected pads **
 

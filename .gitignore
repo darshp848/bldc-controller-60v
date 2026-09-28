@@ -7,3 +7,7 @@ hardware/route*/
 hardware/*.rpt
 docs_tmp*
 tmp_*
+sim/out/*.raw
+sim/out/*.mat
+sim/out/*.log
+sim/out/*.net
