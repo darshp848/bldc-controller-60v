@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, os.path.dirname(__file__))
 from sexp import Sym, parse, find, find1  # noqa: E402
 
-STOCK = r"C:/Program Files/KiCad/9.0/share/kicad/symbols/"
+STOCK = r"C:/Users/darsh/AppData/Local/Programs/KiCad/10.0/share/kicad/symbols/"
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROJECT_LIB = os.path.join(HERE, "..", "hardware", "lib", "better_md80.kicad_sym")
 

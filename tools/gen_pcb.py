@@ -23,7 +23,7 @@ sys.path.insert(0, HERE)
 from sexp import parse, find, find1  # noqa: E402
 
 HW = os.path.normpath(os.path.join(HERE, "..", "hardware"))
-STOCK = "C:/Program Files/KiCad/9.0/share/kicad/footprints/"
+STOCK = "C:/Users/darsh/AppData/Local/Programs/KiCad/10.0/share/kicad/footprints/"
 MECH = json.load(open(os.path.join(HERE, "..", "mech", "md80_v3_mech.json")))
 OX, OY = 150.0, 100.0  # board origin (rotor axis) in KiCad page coordinates
 
@@ -154,8 +154,10 @@ FIXED = {  # ref: (x, y, rotation_deg, side)
 }
 for i, ph in enumerate("ABC"):
     FIXED["Q%d" % (2 * i + 1)] = (PH_X[ph], -13.5, 90, "F")   # high side, drain towards DC link
-    FIXED["Q%d" % (2 * i + 2)] = (PH_X[ph], -20.1, 0, "F")    # low side, drain towards phase pad
-    FIXED["RS%d" % (i + 1)] = (RS_X[ph], -20.1, 0, "B")       # under the low-side FET
+    # low side: drain pad faces its phase-wire hole (C's hole is left of the FET, A/B right)
+    FIXED["Q%d" % (2 * i + 2)] = (PH_X[ph], -20.1, 180 if ph == "C" else 0, "F")
+    # shunt under the low-side FET, current pad 1 under the LS source pins
+    FIXED["RS%d" % (i + 1)] = (RS_X[ph], -20.1, 0 if ph == "C" else 180, "B")
 for k, x in enumerate(CAP_X):
     FIXED["C%d" % (100 + k)] = (x, -7.2, 90, "F")
     FIXED["C%d" % (112 + k)] = (x, -7.2, 90, "B")
@@ -181,6 +183,9 @@ ZONES = [  # (refs, (x, y), side)
 ]
 
 
+FANOUT_RING = {"U4": 2.2, "U5": 2.2}
+
+
 class Packer:
     def __init__(self):
         self.occ = {"F": [], "B": []}
@@ -197,7 +202,7 @@ class Packer:
             x1, x2 = -x2, -x1
         return x1, y1, x2, y2
 
-    def fits(self, box, side, margin=0.15):
+    def fits(self, box, side, margin=0.4):
         x1, y1, x2, y2 = box
         for (a1, b1, a2, b2) in self.occ[side]:
             if x1 < a2 + margin and x2 > a1 - margin and y1 < b2 + margin and y2 > b1 - margin:
@@ -239,7 +244,7 @@ def put(fp, x, y, rot, side):
 def main():
     comps, pinnet = read_netlist()
     board = pcbnew.CreateEmptyBoard()
-    board.SetCopperLayerCount(4)
+    board.SetCopperLayerCount(6)
     ds = board.GetDesignSettings()
     ds.SetBoardThickness(pcbnew.FromMM(1.6))
     ds.m_CopperEdgeClearance = pcbnew.FromMM(0.3)
@@ -309,27 +314,36 @@ def main():
         if ref in placed:
             continue
         center, side = zone_of.get(ref, ((4.0, -2.0), "F"))
-        res = pk.find(fps[ref], center, side) or pk.find(fps[ref], center, "B" if side == "F" else "F")
+        res = pk.find(fps[ref], center, side)
+        if res is None:
+            side = "B" if side == "F" else "F"
+            res = pk.find(fps[ref], center, side)
         if res is None:
             failed.append(ref)
             put(fps[ref], 40, 0, 0, "F")
             continue
         x, y, rot, box = res
-        sd = side if pk.fits(box, side, -1) else side
         put(fps[ref], x, y, rot, side)
         pk.occupy(box, side)
+        if any(p.GetDrillSize().x > 0 for p in fps[ref].Pads()):  # holes go through both sides
+            pk.occupy(box, "B" if side == "F" else "F")
+        if ref in FANOUT_RING:  # keep a via fan-out ring free on both sides
+            r = FANOUT_RING[ref]
+            ring = (box[0] - r, box[1] - r, box[2] + r, box[3] + r)
+            pk.occupy(ring, "F")
+            pk.occupy(ring, "B")
         placed.add(ref)
 
     # net classes: 60 V power nets get wider clearance
     ns = ds.m_NetSettings
     hv = pcbnew.NETCLASS("HV_60V")
-    hv.SetClearance(pcbnew.FromMM(0.2))  # 0.5 mm outer-layer rule in better-md80.kicad_dru
+    hv.SetClearance(pcbnew.FromMM(0.2))
     hv.SetTrackWidth(pcbnew.FromMM(0.5))
     hv.SetViaDiameter(pcbnew.FromMM(0.8))
     hv.SetViaDrill(pcbnew.FromMM(0.4))
     try:
         ns.SetNetclass("HV_60V", hv)
-        for pat in ("VBUS", "PH*", "LS*", "SW12", "BST12", "GH*", "GL*", "CPH", "CPL", "VCP"):
+        for pat in ("VBUS", "PH*", "SW12", "BST12", "GH*", "CPH", "CPL", "VCP", "SNUB*"):
             ns.SetNetclassPatternAssignment(pat, "HV_60V")
     except Exception as ex:  # API differs between 9.0.x releases
         print("net class setup skipped:", ex)

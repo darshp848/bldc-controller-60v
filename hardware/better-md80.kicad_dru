@@ -1,14 +1,9 @@
 (version 1)
 
-# 60 V bus: IPC-2221B B2 (external, uncoated, 51-100 V) asks 0.6 mm, B4 (coated) 0.13 mm.
-# Target 0.5 mm on outer layers between HV nets and everything else; conformal coat the
-# power area if you go tighter. Fine-pitch driver/MOSFET pins are exempt (package limited).
-(rule "HV outer spacing"
-	(layer outer)
-	(condition "A.NetClass == 'HV_60V' && B.NetClass != 'HV_60V' && !A.memberOfFootprint('U4') && !A.memberOfFootprint('U1') && !A.memberOfFootprint('Q*')")
-	(constraint clearance (min 0.5mm)))
-
-(rule "HV inner spacing"
-	(layer inner)
-	(condition "A.NetClass == 'HV_60V' && B.NetClass != 'HV_60V'")
-	(constraint clearance (min 0.25mm)))
+# 60 V nets (net class HV_60V) are routed at 0.2 mm clearance. That meets IPC-2221B B4
+# (external, coated: 0.13 mm for 51-100 V) but not B2 (uncoated: 0.6 mm), so the board
+# REQUIRES conformal coating over the power stage and gate-drive area.
+# Around the DRV8353 / LM5164 pins the package pitch sets the spacing.
+(rule "HV at fine-pitch fan-out"
+	(condition "A.NetClass == 'HV_60V' && (A.intersectsArea('FINEPITCH_U4') || A.intersectsArea('FINEPITCH_U1') || A.memberOfFootprint('Q*'))")
+	(constraint clearance (min 0.15mm)))

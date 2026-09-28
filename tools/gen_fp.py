@@ -65,10 +65,11 @@ def main():
     for i, dy in enumerate((-3, 0, 3)):
         b += tht(str(i + 1), 0, dy, 1.9, 1.07)
         b += tht(str(i + 4), 3, dy, 1.9, 1.07)
+    b += npth(-4.32, 0, 3.0)  # housing peg; MD80 STEP has it at x = -26.3 for both connectors
     b += rect(-7.3, -5.2, 4.3, 5.2, "F.CrtYd") + rect(-7.0, -4.95, 1.8, 4.95, "F.Fab", 0.1)
     b += rect(-1.2, -4.3, 4.2, 4.3, "B.CrtYd")
     write("MD80_MicroFit_2x03_RA",
-          "Molex Micro-Fit 3.0 43045-06xx 2x3 R/A at MD80 v3.0 pin pitch; pad 1-3 edge row, origin pad 2", b)
+          "Molex Micro-Fit 3.0 43045-06xx 2x3 R/A with 3.0 mm peg, MD80 v3.0 geometry; pad 1-3 edge row, origin pad 2", b)
 
     b = txt(-2.6, 2.6, "MD80_Phase_Pad") + tht("1", 0, 0, 3.0, 1.9)
     b += circle(0, 0, 1.75, "F.CrtYd") + circle(0, 0, 1.75, "B.CrtYd")
@@ -83,13 +84,10 @@ def main():
         b += npth(x, -y, 2 * r)
         b += circle(x, -y, 2.4, "F.CrtYd") + circle(x, -y, 2.4, "B.CrtYd")  # 4.8 mm standoff
         b += circle(x, -y, 2.4, "F.SilkS", 0.15)
-    for (x, y, r) in holes(1.45, 1.52):
-        b += npth(x, -y, 2 * r) + circle(x, -y, 1.7, "B.CrtYd")
-    b += npth(PEG_ODD[0], -PEG_ODD[1], 3.0) + circle(PEG_ODD[0], -PEG_ODD[1], 1.7, "B.CrtYd")
     for (x, y) in NOTCHES:
         b += circle(x, -y, 2.25, "F.CrtYd") + circle(x, -y, 2.25, "B.CrtYd")  # DIN912 M2.5 head
     write("MD80_V3_Mechanical",
-          "MD80 v3.0 mounting: 4x 3.2 mm holes for M2.5 DIN912, Micro-Fit peg holes, screw keep-outs; origin = rotor axis",
+          "MD80 v3.0 mounting: 4x 3.2 mm holes for M2.5 DIN912 and screw keep-outs; origin = rotor axis",
           b, attr="board_only exclude_from_pos_files exclude_from_bom")
     print("footprints written to", os.path.normpath(OUT))
 

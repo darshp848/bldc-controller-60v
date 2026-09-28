@@ -3,3 +3,7 @@ hardware/*.kicad_prl
 hardware/fp-info-cache
 hardware/~*.lck
 __pycache__/
+hardware/route*/
+hardware/*.rpt
+docs_tmp*
+tmp_*

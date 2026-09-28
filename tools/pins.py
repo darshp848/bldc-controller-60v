@@ -3,7 +3,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 from sexp import parse, find, find1
 
-LIBDIR = r"C:/Program Files/KiCad/9.0/share/kicad/symbols/"
+LIBDIR = r"C:/Users/darsh/AppData/Local/Programs/KiCad/10.0/share/kicad/symbols/"
 _cache = {}
 
 
