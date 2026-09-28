@@ -1,0 +1,10 @@
+hot-plug, 0.5 m cable (0.5 uH), TVS                                    peak 97.9 V, TVS peak 6.4 A
+hot-plug, 2 m cable (2 uH), TVS                                        peak 106.2 V, TVS peak 8.4 A
+hot-plug, 2 m cable, no TVS                                            peak 108.2 V, TVS peak -0.0 A
+hot-plug, 2 m cable, TVS + 100 uF / 150 mOhm electrolytic at supply    peak 72.3 V, TVS peak 0.5 A
+hot-plug, 2 m cable, SMCJ60A instead                                   peak 103.7 V, TVS peak 19.3 A
+hot-plug, 2 m cable, 5.0SMDJ60A instead                                peak 96.4 V, TVS peak 50.3 A
+regen 5 A, board caps only                                             peak 88.3 V, reaches 63 V after 12.4 us
+regen 20 A, board caps only                                            peak 146.8 V, reaches 63 V after 3.4 us
+regen 20 A, + 470 uF external                                          peak 70.9 V, reaches 63 V after 9.5 us
+regen 20 A, board caps, 5.0SMDJ60A                                     peak 80.7 V, reaches 63 V after 3.4 us

@@ -2,7 +2,7 @@
 	(version "E")
 	(design
 		(source "C:\\Users\\darsh\\Projects\\better-md80\\hardware\\better-md80.kicad_sch")
-		(date "2026-09-27T23:47:41")
+		(date "2026-09-28T08:56:47")
 		(tool "Eeschema 10.0.6")
 		(sheet
 			(number "1")
@@ -12007,7 +12007,7 @@
 		(net
 			(code "39")
 			(name "GLA")
-			(class "HV_60V")
+			(class "Default")
 			(node
 				(ref "R21")
 				(pin "1")
@@ -12023,7 +12023,7 @@
 		(net
 			(code "40")
 			(name "GLA_G")
-			(class "HV_60V")
+			(class "Default")
 			(node
 				(ref "Q2")
 				(pin "4")
@@ -12039,7 +12039,7 @@
 		(net
 			(code "41")
 			(name "GLB")
-			(class "HV_60V")
+			(class "Default")
 			(node
 				(ref "R23")
 				(pin "1")
@@ -12055,7 +12055,7 @@
 		(net
 			(code "42")
 			(name "GLB_G")
-			(class "HV_60V")
+			(class "Default")
 			(node
 				(ref "Q4")
 				(pin "4")
@@ -12071,7 +12071,7 @@
 		(net
 			(code "43")
 			(name "GLC")
-			(class "HV_60V")
+			(class "Default")
 			(node
 				(ref "R25")
 				(pin "1")
@@ -12087,7 +12087,7 @@
 		(net
 			(code "44")
 			(name "GLC_G")
-			(class "HV_60V")
+			(class "Default")
 			(node
 				(ref "Q6")
 				(pin "4")
@@ -12888,7 +12888,7 @@
 		(net
 			(code "58")
 			(name "LSA")
-			(class "HV_60V")
+			(class "Default")
 			(node
 				(ref "Q2")
 				(pin "1")
@@ -12916,7 +12916,7 @@
 		(net
 			(code "59")
 			(name "LSB")
-			(class "HV_60V")
+			(class "Default")
 			(node
 				(ref "Q4")
 				(pin "1")
@@ -12944,7 +12944,7 @@
 		(net
 			(code "60")
 			(name "LSC")
-			(class "HV_60V")
+			(class "Default")
 			(node
 				(ref "Q6")
 				(pin "1")
@@ -13328,7 +13328,7 @@
 		(net
 			(code "76")
 			(name "SNUBA")
-			(class "Default")
+			(class "HV_60V")
 			(node
 				(ref "C23")
 				(pin "1")
@@ -13343,7 +13343,7 @@
 		(net
 			(code "77")
 			(name "SNUBB")
-			(class "Default")
+			(class "HV_60V")
 			(node
 				(ref "C27")
 				(pin "1")
@@ -13358,7 +13358,7 @@
 		(net
 			(code "78")
 			(name "SNUBC")
-			(class "Default")
+			(class "HV_60V")
 			(node
 				(ref "C31")
 				(pin "1")

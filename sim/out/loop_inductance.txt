@@ -1,0 +1,6 @@
+baseline (5 LS vias, 3 GND vias, meshed In1)	1e+07 Hz	L=5.043 nH	R=3.307 mOhm
+baseline (5 LS vias, 3 GND vias, meshed In1)	1e+08 Hz	L=5.042 nH	R=3.318 mOhm
+more vias (10 LS, 8 GND)	1e+07 Hz	L=4.897 nH	R=3.259 mOhm
+more vias (10 LS, 8 GND)	1e+08 Hz	L=4.896 nH	R=3.270 mOhm
+HF loop via local 100 nF (C26)	1e+07 Hz	L=5.137 nH	R=3.085 mOhm
+HF loop via local 100 nF (C26)	1e+08 Hz	L=5.134 nH	R=3.186 mOhm

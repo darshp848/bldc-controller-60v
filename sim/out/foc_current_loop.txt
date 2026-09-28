@@ -1,0 +1,3 @@
+target 1.0 kHz: Kp=0.565 V/A, Ki=1257 V/(A s), phase margin 76.5 deg, gain margin 16.5 dB, crossover 1.00 kHz, closed-loop -3 dB 1.36 kHz, 20 A steady-state noise 7 mA rms
+target 2.5 kHz: Kp=1.414 V/A, Ki=3142 V/(A s), phase margin 56.3 deg, gain margin 8.5 dB, crossover 2.50 kHz, closed-loop -3 dB 5.97 kHz, 20 A steady-state noise 52 mA rms
+ADC resolution 80.6 mA/LSB, +/-165 A range; max duty for clean 3-shunt sampling 92.0 %

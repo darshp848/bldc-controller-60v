@@ -45,7 +45,7 @@ def _clr(item):
     return 0.2 if item.GetNetname() in HV else 0.15
 
 
-def obstacles(board, net, layer, inflate):
+def obstacles(board, net, layer, inflate, zones=True):
     """inflate = own half-width + own clearance; items of 60 V nets get at least 0.2 mm."""
     base = inflate - CLR
     ps = pcbnew.SHAPE_POLY_SET()
@@ -58,7 +58,7 @@ def obstacles(board, net, layer, inflate):
         if t.GetNetCode() == net or not t.IsOnLayer(layer):
             continue
         t.TransformShapeToPolygon(ps, layer, MM(base + max(CLR, _clr(t))), MM(0.01), pcbnew.ERROR_INSIDE)
-    for z in board.Zones():
+    for z in (board.Zones() if zones else []):
         if z.GetIsRuleArea() or z.GetNetCode() == net or not z.IsOnLayer(layer):
             continue
         fill = z.GetFilledPolysList(layer)
@@ -85,11 +85,12 @@ HV = ("VBUS", "PHA", "PHB", "PHC", "SW12", "BST12", "GHA", "GHB", "GHC", "GHA_G"
 
 
 def route_pair(board, pair):
-    global CLR, W
+    global CLR, W, MARGIN
     m = re.search(r"\[([^\]]+)\]", pair[0][2]) or re.search(r"\[([^\]]+)\]", pair[1][2])
     hv = m.group(1) in HV
-    for clr, w in ((0.2 if hv else 0.15, 0.15), (0.2 if hv else 0.15, 0.1)):
-        CLR, W = clr, w
+    base = 0.2 if hv else 0.15
+    for clr, w, mg in ((base, 0.15, 0.04), (base, 0.1, 0.04), (base, 0.1, 0.01)):
+        CLR, W, MARGIN = clr, w, mg
         res = _route_pair(board, pair)
         if res[1]:
             return res + (w,)
@@ -125,7 +126,9 @@ def _route_pair(board, pair):
                 ok = gen_pcb.inside(sx, sy) and gen_pcb.edge_dist(sx, sy) > 0.3 + W / 2 + MARGIN
                 grid[j * nx + i] = 1 if ok and not obs.Contains(pt) else 0
         free[L] = grid
-    vobs = [obstacles(board, nc, L, CLR + VIA / 2 + MARGIN) for L in LAYERS + [pcbnew.In1_Cu]]
+    vobs = [obstacles(board, nc, L, CLR + VIA / 2 + MARGIN) for L in LAYERS]
+    # In1 is the GND plane: its fill re-flows around new vias, only its tracks matter
+    vobs.append(obstacles(board, nc, pcbnew.In1_Cu, CLR + VIA / 2 + MARGIN, zones=False))
     edge = board.GetBoardEdgesBoundingBox()
 
     def via_ok(i, j):

@@ -45,7 +45,8 @@ def main():
                         min((t.GetStart() - p).EuclideanNorm(), (t.GetEnd() - p).EuclideanNorm()) < TOL:
                     doomed.append(t)
         elif kind == "hole_to_hole":
-            vias = [(x, y) for x, y, d in items if d.startswith("Via")]
+            # only ever drop GND stitching vias; a signal via here needs a real fix
+            vias = [(x, y) for x, y, d in items if d.startswith("Via [GND]")]
             if vias:
                 x, y = vias[-1]
                 p = at(x, y)
