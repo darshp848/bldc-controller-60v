@@ -1,4 +1,29 @@
-# Simulation report (first layout pass)
+# Simulation report
+
+## Layout rev B (current board)
+
+Changes driven by the rev A results below: D1 is now a 5.0SMDJ60A (SMC), the power stage
+uses two top-side shunts (phases A and C) standing between the high-side FETs, and phase
+B's low side returns straight into the GND plane.
+
+| Check | Rev A | Rev B |
+|---|---|---|
+| Commutation loop, phase A/C (FastHenry, `loop_inductance.py --rev-b`) | 5.0 nH | **2.96 nH** |
+| Commutation loop, phase B | 5.0 nH | **2.70 nH** |
+| Hot-plug 60 V through 2 m cable | 106 V (SMBJ60A) | **96 V (5.0SMDJ60A)** |
+| Double pulse 60 V / 80 A, diode-recovery peak (IDRIVE 300 mA) | 83 V | 86 V |
+| Double pulse 60 V / 20 A | 76 V | 71 V |
+| Double pulse 60 V / 80 A with snubbers fitted | 60 V | 66 V |
+
+The shorter loop raises the ringing frequency (about 70 -> 95 MHz) but does not lower the 80 A
+peak, which is set by the body-diode recovery of the ISC022N10NM6 at this gate drive. The
+100 V FETs keep about 14 V of margin at the worst case; keep IDRIVEP at 300 mA and fit the
+snubbers on the first boards.
+
+Remaining layout weaknesses in rev B: crystal traces 18 / 26 mm (the MCU surroundings are full
+of fan-out vias), gate traces 24-31 mm, and 52 reference designators hidden for lack of room.
+
+# Rev A results (first layout pass)
 
 Tools on the design laptop: FastHenry2 (loop inductance), LTspice 26 (switching and bus
 transients), MATLAB R2026a + Control System Toolbox (current loop). Every run is a script

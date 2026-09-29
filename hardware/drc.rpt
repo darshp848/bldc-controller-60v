@@ -1,12 +1,12 @@
 ** Drc report for better-md80.kicad_pcb **
-** Created on 2026-09-28T08:57:25 **
+** Created on 2026-09-28T23:22:46 **
 ** Report includes: Errors **
 
 ** Found 1 DRC violations **
 [courtyards_overlap]: Courtyards overlap
     Rule: board setup constraints courtyard; error
-    @(153.1500 mm, 79.0000 mm): Footprint J3
     @(150.0000 mm, 100.0000 mm): Footprint MECH1
+    @(153.1500 mm, 79.0000 mm): Footprint J3
 
 ** Found 0 unconnected pads **
 

@@ -140,8 +140,10 @@ def load_fp(fpid):
 
 # ------------------------------------------------------------------ placement plan (STEP coords)
 PH_X = {"A": -10.0, "B": 0.0, "C": 10.0}
-RS_X = PH_X
+SHUNT_GAP_X = {"A": -5.0, "C": 5.0}   # top-side shunts stand in the gaps between the high-side FETs
+SHUNT_Y = -12.6
 CAP_X = [-16.5 + 3.0 * k for k in range(12)]
+CAP_X_TOP = [x for x in CAP_X if abs(abs(x) - 6.0) > 2.0]  # keep the shunt gaps free
 
 FIXED = {  # ref: (x, y, rotation_deg, side)
     "MECH1": (0, 0, 0, "F"),
@@ -150,17 +152,21 @@ FIXED = {  # ref: (x, y, rotation_deg, side)
     "J5": (15.43, -19.35, 0, "F"),
     "J10": (-5.8, -24.8, 0, "F"), "J11": (0.0, -25.0, 0, "F"), "J12": (5.8, -24.8, 0, "F"),
     "U7": (0, 0, 0, "B"),
-    "D1": (-15.0, -1.0, 90, "F"),
+    "D1": (-14.2, 1.0, 90, "F"),   # 5.0SMDJ60A, SMC, next to the power entry
 }
 for i, ph in enumerate("ABC"):
     FIXED["Q%d" % (2 * i + 1)] = (PH_X[ph], -13.5, 90, "F")   # high side, drain towards DC link
-    # low side: drain pad faces its phase-wire hole (C's hole is left of the FET, A/B right)
-    FIXED["Q%d" % (2 * i + 2)] = (PH_X[ph], -20.1, 180 if ph == "C" else 0, "F")
-    # shunt under the low-side FET, current pad 1 under the LS source pins
-    FIXED["RS%d" % (i + 1)] = (RS_X[ph], -20.1, 0 if ph == "C" else 180, "B")
+    # low side: A's sources face the A/B gap (rot 180), B and C sources face left (rot 0)
+    FIXED["Q%d" % (2 * i + 2)] = (PH_X[ph], -20.1, 180 if ph == "A" else 0, "F")
+for i, ph in enumerate("ABC"):
+    if ph in SHUNT_GAP_X:
+        FIXED["RS%d" % (i + 1)] = (SHUNT_GAP_X[ph], SHUNT_Y, 90, "F")   # pad 1 (low-side end) down
+top_caps = ["C%d" % (100 + k) for k in range(12)]
+for ref, x in zip(top_caps, CAP_X_TOP):
+    FIXED[ref] = (x, -7.2, 90, "F")
 for k, x in enumerate(CAP_X):
-    FIXED["C%d" % (100 + k)] = (x, -7.2, 90, "F")
     FIXED["C%d" % (112 + k)] = (x, -7.2, 90, "B")
+EXTRA_CAPS = top_caps[len(CAP_X_TOP):]   # the rest of the DC-link caps are packed near the bus
 
 ZONES = [  # (refs, (x, y), side)
     (["U4", "C40", "C41", "C42", "C43", "C44", "C45", "C46", "C47", "R40", "R41", "R42"], (-8.5, 2.5), "F"),
@@ -176,7 +182,8 @@ ZONES = [  # (refs, (x, y), side)
     (["R72", "R73", "R74", "R75"], (0.0, 16.5), "B"),
     (["U8", "C74", "R76", "R77", "R78"], (14.0, 3.0), "B"),
     (["R79", "R80", "C75"], (12.0, -17.0), "B"),
-    (["TH1", "R33", "C32"], (-5.0, -16.5), "B"),
+    (["TH1", "R33", "C32"], (-2.0, -16.5), "B"),
+    (EXTRA_CAPS, (0.0, -3.8), "B"),
     (["R20", "R21", "C22", "R30", "C23"], (-10.0, -13.0), "B"),
     (["R22", "R23", "C26", "R31", "C27"], (0.0, -13.0), "B"),
     (["R24", "R25", "C30", "R32", "C31"], (9.5, -13.0), "B"),
@@ -314,6 +321,20 @@ def main():
         if ref in placed:
             continue
         center, side = zone_of.get(ref, ((4.0, -2.0), "F"))
+        if ref in ("Y1", "C68", "C69") and "U5" in placed:
+            u5 = fps["U5"]
+            pins = {p.GetNumber(): p.GetPosition() for p in u5.Pads()}
+            c5 = u5.GetPosition()
+            hx = (pins["5"].x + pins["6"].x) / 2
+            hy = (pins["5"].y + pins["6"].y) / 2
+            dx, dy = hx - c5.x, hy - c5.y
+            L = max(1, math.hypot(dx, dy))
+            d = pcbnew.FromMM({"Y1": 5.2, "C68": 7.6, "C69": 7.6}[ref])
+            px, py = hx + dx / L * d, hy + dy / L * d
+            off = {"Y1": 0, "C68": -1.6, "C69": 1.6}[ref]
+            px += -dy / L * pcbnew.FromMM(off)
+            py += dx / L * pcbnew.FromMM(off)
+            center, side = ((pcbnew.ToMM(px) - OX, OY - pcbnew.ToMM(py)), "F")
         res = pk.find(fps[ref], center, side)
         if res is None:
             side = "B" if side == "F" else "F"

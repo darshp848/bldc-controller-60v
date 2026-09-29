@@ -126,5 +126,68 @@ def main():
                 fo.write("%s\t%.3g Hz\tL=%.3f nH\tR=%.3f mOhm\n" % (label, fi, li * 1e9, ri * 1e3))
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and "--rev-b" not in __import__("sys").argv:
     main()
+
+
+def build_rev_b(phase="A"):
+    """Layout rev B: top-side shunt in the gap next to the phase (A shown; C mirrors it),
+    or phase B whose low side returns straight into the GND plane (two-shunt sensing)."""
+    nodes.clear()
+    edges.clear()
+    x0 = -10.0 if phase == "A" else 0.0
+    cx = x0 - 0.5 if phase == "A" else 1.5         # nearest DC-link capacitor on the top row
+    ca = N("capP", cx, -8.67, ZF)
+    cb = N("capN", cx, -5.72, ZF)
+    hd = N("hsD", x0, -12.45, ZF)
+    E(ca, hd, 4.0, T_OUT)
+    hdu, hsu, hs = N("hsDu", x0, -12.45, ZPKG), N("hsSu", x0, -16.4, ZPKG), N("hsS", x0, -16.4, ZF)
+    E(hd, hdu, 4.0, 0.2); E(hdu, hsu, 4.0, 0.2); E(hsu, hs, 3.0, 0.2)
+    if phase == "A":
+        ld = N("lsD", x0 - 1.05, -18.5, ZF)      # LS rotated 180: drain left, sources right
+        lsx = x0 + 2.9
+    else:
+        ld = N("lsD", x0 + 1.05, -18.5, ZF)
+        lsx = x0 - 2.9
+    E(hs, ld, 3.5, T_OUT)
+    ldu = N("lsDu", ld and (x0 - 1.05 if phase == "A" else x0 + 1.05), -19.5, ZPKG)
+    lsu, ls = N("lsSu", lsx, -19.5, ZPKG), N("lsS", lsx, -19.5, ZF)
+    E(ld, ldu, 4.0, 0.2); E(ldu, lsu, 4.0, 0.2); E(lsu, ls, 3.0, 0.2)
+    if phase == "A":
+        s1 = N("sh1", -5.64, -15.08, ZF)
+        E(ls, s1, 2.5, T_OUT)                    # LSA pour up the gap
+        s4 = N("sh4", -4.36, -10.12, ZF)
+        E(s1, s4, 3.0, 0.6)                      # shunt element
+        g = N("gV", -6.2, -11.5, ZF)
+        E(s4, g, 1.5, T_OUT)
+        gx, gy = -6.2, -11.5
+    else:
+        g = N("gV", -2.9, -17.0, ZF)
+        E(ls, g, 1.5, T_OUT)
+        gx, gy = -2.9, -17.0
+    gi = N("gVi", gx, gy, ZI1)
+    E(g, gi, 0.9, 0.9)                           # GND vias
+    edges.append(("G1 x1=-18 y1=-24 z1=%.3f x2=12 y2=-24 z2=%.3f x3=12 y3=-3 z3=%.3f thick=%.3f "
+                  "seg1=30 seg2=21\n+ Nnin (%.2f,%.2f,%.3f)\n+ Nnout (%.2f,-5.4,%.3f)")
+                 % (ZI1, ZI1, ZI1, T_IN, gx, gy, ZI1, cx + 1.5, ZI1))
+    ci = N("cVi", cx + 1.5, -5.4, ZI1)
+    edges.append(".equiv %s Nnin" % gi)
+    edges.append(".equiv %s Nnout" % ci)
+    ct = N("cVt", cx + 1.5, -5.4, ZF)
+    E(ci, ct, 0.3, 0.3)
+    E(ct, cb, 1.0, T_OUT)
+    txt = ["* rev B loop, phase " + phase, ".Units mm", ".Default sigma=5.8e4", ""]
+    txt += nodes + [""] + edges + ["", ".external %s %s" % (ca, cb), ".freq fmin=1e7 fmax=1e8 ndec=1", ".end"]
+    return "\n".join(txt) + "\n"
+
+
+if __name__ == "__main__" and "--rev-b" in __import__("sys").argv:
+    with open(os.path.join(OUT, "loop_inductance_revB.txt"), "w") as fo:
+        for ph in ("A", "B"):
+            path = os.path.join(OUT, "loop_revB_%s.inp" % ph)
+            open(path, "w").write(build_rev_b(ph))
+            ok, f, L, R = run(path)
+            line = "rev B phase %s (%s): L=%.2f nH at %.0f MHz" % (
+                ph, "top-side shunt" if ph == "A" else "no shunt, straight to GND", L[0] * 1e9, f[0] / 1e6)
+            print(line)
+            fo.write(line + "\n")

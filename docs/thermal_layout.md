@@ -53,13 +53,11 @@ autorouter necked down at pads); HV_60V class 0.4 mm tracks, 0.6/0.3 mm vias, 0.
 ## Layout rules
 
 1. **Commutation loop first.** Each half-bridge's HS drain, LS source/shunt and the DC-link
-   capacitors must form the smallest possible loop: HS FETs sit directly under the top
-   capacitor row, the bottom capacitor row mirrors it, and the 100 nF 100 V caps (C22, C26,
-   C30) go on the bottom straddling each HS drain / shunt ground. Via-stitch the VBUS pad
-   of every HS FET to In2 and the shunt ground end to In1 with at least 8 vias each.
-2. **Kelvin sensing.** SPx / SNx run as a differential pair from the inner shunt pads
-   (pads 2 and 3 of the WSK2512 footprint) straight to the DRV8353, away from phase nodes.
-   Do not tie SNx to the GND plane anywhere else.
+   capacitors form the smallest loop the MD80 outline allows: HS FETs directly under the top
+   capacitor row, shunts on the top side next to the low-side sources, shunt ground ends
+   via'd straight into In1 beside the DC-link row.
+2. **Kelvin sensing.** SPA/SNA and SPC/SNC run from the inner shunt pads (pads 2 and 3 of the
+   WSK2512 footprint) to the DRV8353. CSA B's inputs are tied to GND (two-shunt sensing).
 3. **Gate loops.** GHx and SHx run as a pair, GLx paired with its LS source; keep under
    ~15 mm. The 0 Ohm gate resistors (R20-R25) are there to add 2-5 Ohm if ringing needs it.
 4. **Snubbers.** R30-R32 / C23, C27, C31 are DNP; fit only if the phase-node ringing on the
@@ -92,6 +90,10 @@ the rest, 2.2 mm fan-out rings around the DRV8353 and MCU). Routing flow (`tools
 4. `route_pcb.py final`: board-wide GND pours, VBUS plane, stitching vias, silkscreen fixer
 5. `cleanup.py` for hole-to-hole and silkscreen DRC warnings
 
-Known layout weaknesses from this first pass (details in docs/simulation.md): 8 MHz crystal
-traces 19-32 mm, gate traces 21-28 mm, 5 nH commutation loop, and 46 reference designators
-hidden for lack of room (they remain on the fab layer).
+Rev B power stage: high-side FETs at y = -13.5 mm, low-side FETs at y = -20.1 mm, the phase A
+and C Kelvin shunts standing on the top side in the gaps between the high-side FETs (their
+ground ends via straight into In1 next to the DC-link row), phase B's low side straight to GND.
+The 5.0SMDJ60A sits next to the Micro-Fits. Commutation loop about 3 nH (docs/simulation.md).
+
+Known weaknesses (details in docs/simulation.md): 8 MHz crystal traces 18 / 26 mm, gate traces
+24-31 mm, and 52 reference designators hidden for lack of room (they stay on the fab layer).

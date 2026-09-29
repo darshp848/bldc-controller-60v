@@ -1,0 +1,6 @@
+case	Vbus	I_pk	VDS_LS_peak_turnoff	VDS_HS_peak_recovery	ring_MHz
+60V_80A	60	80	64.8	83.2	81
+60V_20A	60	20	62.5	75.6	1
+48V_80A	48	80	52.8	77.1	59
+60V_80A_snub	60	80	64.8	60.3	102
+60V_80A_fast	60	80	64.9	95.1	146

@@ -46,9 +46,9 @@ photos and the STEP model rather than read from a schematic:
 |---|---|---|---|
 | Gate driver + CSA | TI **DRV8353SRTAR** (WQFN-40 6x6) | VDRAIN 100 V (102 V abs), VM 9-75 V | 100 V class, SPI-programmable IDRIVE, 3 low-side CSAs (gain 5/10/20/40), VDS and VGS monitoring |
 | MOSFETs (x6) | Infineon **ISC022N10NM6ATMA1** (SuperSO8 5x6) | 100 V, 2.24 mOhm max @ 10 V | Lowest R_DS(on) 100 V part in the MD80's 5x6 footprint; this is what keeps 80 A peak |
-| Shunts (x3) | 0.5 mOhm 2512 Kelvin (Vishay WSK2512) | 3 W class | 10 mV/A; with CSA gain 20 gives +/-140 A range, 80 mA/LSB at 12 bit |
+| Shunts (x2, phases A and C) | 0.5 mOhm 2512 Kelvin (Vishay WSK2512), top side between the FETs | 3 W class | 10 mV/A; with CSA gain 20 gives +/-140 A range, 80 mA/LSB at 12 bit. Two-shunt sensing keeps the commutation loop at about 3 nH (docs/simulation.md) |
 | DC-link | 24x **TDK C3216X7S2A225K160AB** 2.2 uF 100 V X7S 1206 | 100 V | Same 1206 rows as MD80 (12 top + 12 bottom), 53 uF nominal, ~20 uF at 48 V bias |
-| Input TVS | Littelfuse **SMBJ60A** | VRWM 60 V, VBR 66.7 V min, VC 96.8 V | Clamps hot-plug and cable ringing below the 100 V parts |
+| Input TVS | Littelfuse **5.0SMDJ60A** (SMC) | VRWM 60 V, VC 96.8 V at 51.6 A | Holds a 60 V hot-plug through a 2 m cable below 100 V (the SMBJ60A reached 106 V in simulation) |
 | 60 V -> 12 V | TI **LM5164DDAR** | 6-100 V in, 1 A | Feeds gate drive (DRV8353 VM) and the 5 V buck |
 | 12 V -> 5 V | TI **TPS62163DSGR** | 3-17 V in, 1 A, fixed 5 V | CAN transceiver, AUX 5 V (150 mA), LDO input |
 | 5 V -> 3.3 V | TI **TLV75533PDBVR** | 500 mA LDO | MCU, encoder, RS-422; ferrite-filtered +3V3A for analog/VREF |
@@ -71,7 +71,7 @@ which is needed anyway for the logic rails.
 ```
 VBUS 12-60 V --+-- 6x ISC022N10NM6 half-bridges -- motor
                +-- DRV8353 VDRAIN (HS drain sense + charge-pump reference)
-               +-- SMBJ60A, 24x 2.2 uF/100 V, 100k/5.1k VBUS sense
+               +-- 5.0SMDJ60A, 24x 2.2 uF/100 V, 100k/5.1k VBUS sense
                +-- LM5164 (400 kHz, UVLO ~10.8 V) --> +12V
                         +-- DRV8353 VM (gate drive)
                         +-- TPS62163 --> +5V --+-- TCAN1044 VCC, AUX1/AUX2 5 V out

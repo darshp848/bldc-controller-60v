@@ -12,7 +12,7 @@ protocol, which is documented on the MAB site.
 |---|---|---|
 | INHA / INHB / INHC | PA8 / PA9 / PA10 | TIM1_CH1 / CH2 / CH3 (AF6) |
 | INLA / INLB / INLC | PB13 / PB14 / PB15 | TIM1_CH1N / CH2N / CH3N (AF6) |
-| SOA / SOB / SOC | PA0 / PA1 / PA2 | ADC12_IN1 / ADC12_IN2 / ADC1_IN3 |
+| SOA / SOC | PA0 / PA2 | ADC12_IN1 / ADC1_IN3 (SOB on PA1 reads the unused CSA, ignore it) |
 | VBUS_SENSE | PA3 | ADC1_IN4 (100k / 5.1k, 20.6:1) |
 | TEMP_FET / TEMP_MOTOR | PB0 / PB1 | ADC1_IN15 / ADC1_IN12 (10k pull-up to 3V3A) |
 | DRV8353 SPI | PA5 SCK, PA6 MISO, PA7 MOSI, PA4 nCS | SPI1 (AF5), mode 1, <= 10 MHz |
@@ -41,8 +41,11 @@ which 170 MHz would not.
 
 - TIM1 centre-aligned, ARR = 2000 at 160 MHz -> 40 kHz. DRV8353 in 6x PWM mode; MCU dead time
   ~150 ns on top of the driver's handshake dead time.
-- Sample SOA/SOB/SOC at the counter underflow (all low-side FETs on), ADC1+ADC2 dual simultaneous,
-  triggered from TIM1 TRGO2. With 0.5 mOhm shunts and CSA gain 20: 10 mV/A, +/-140 A range,
+- **Two-shunt sensing (layout rev B):** shunts on phases A and C only; phase B's low side goes
+  straight to GND, so ib = -(ia + ic). Sample SOA and SOC at the counter underflow (all
+  low-side FETs on), ADC1+ADC2 dual simultaneous, triggered from TIM1 TRGO2. Both measured
+  phases need their low side on for about 2 us, so limit the A and C duty to about 92 %; phase B can
+  go to 100 %. With 0.5 mOhm shunts and CSA gain 20: 10 mV/A, +/-140 A range,
   ~80 mA per LSB.
 - Loop rates to match the MD80: current/torque and impedance 40 kHz, velocity 5 kHz,
   position 1 kHz. CORDIC for sin/cos, FMAC optional.

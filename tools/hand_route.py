@@ -81,7 +81,8 @@ def obstacles(board, net, layer, inflate, zones=True):
     return ps
 
 
-HV = ("VBUS", "PHA", "PHB", "PHC", "SW12", "BST12", "GHA", "GHB", "GHC", "GHA_G", "GHB_G", "GHC_G", "CPH", "CPL", "VCP")
+HV = ("VBUS", "PHA", "PHB", "PHC", "SW12", "BST12", "GHA", "GHB", "GHC", "GHA_G", "GHB_G", "GHC_G", "CPH", "CPL", "VCP",
+      "SNUBA", "SNUBB", "SNUBC")
 
 
 def route_pair(board, pair):
@@ -126,7 +127,8 @@ def _route_pair(board, pair):
                 ok = gen_pcb.inside(sx, sy) and gen_pcb.edge_dist(sx, sy) > 0.3 + W / 2 + MARGIN
                 grid[j * nx + i] = 1 if ok and not obs.Contains(pt) else 0
         free[L] = grid
-    vobs = [obstacles(board, nc, L, CLR + VIA / 2 + MARGIN) for L in LAYERS]
+    # vias may pierce other nets' zones (the fill re-flows around them); only tracks and pads block
+    vobs = [obstacles(board, nc, L, CLR + VIA / 2 + MARGIN, zones=False) for L in LAYERS]
     # In1 is the GND plane: its fill re-flows around new vias, only its tracks matter
     vobs.append(obstacles(board, nc, pcbnew.In1_Cu, CLR + VIA / 2 + MARGIN, zones=False))
     edge = board.GetBoardEdgesBoundingBox()
@@ -143,7 +145,7 @@ def _route_pair(board, pair):
         return int(round((x - x0) / GRID)), int(round((y - y0) / GRID))
     s, g = cell(x1, y1), cell(x2, y2)
     start = [(0.0, (s[0], s[1], L)) for L in la]
-    goal = set((g[0], g[1], L) for L in lb)
+    goal = set((g[0] + di, g[1] + dj, L) for L in lb for di in range(-3, 4) for dj in range(-3, 4))
     # endpoints sit on own-net copper, so force them free
     for L in LAYERS:
         for (ci, cj) in (s, g):

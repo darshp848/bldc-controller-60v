@@ -12,7 +12,7 @@ encoder position, with the MD80's 20 A continuous / 80 A peak phase current.
 |---|---|
 | Schematic (KiCad 10, 6 sheets, 137 symbols) | done, ERC 0 errors 0 warnings |
 | PCB outline, holes, connectors vs MAB STEP | done, 36 holes match to 0.000 mm (`mech/fit_check.txt`) |
-| PCB (145 footprints, 6 layers) | placed and routed; DRC: 0 unconnected, 1 error (MD80-inherent AUX1/screw overlap) |
+| PCB rev B (144 footprints, 6 layers) | routed; DRC: 0 unconnected, 1 error (MD80-inherent AUX1/screw overlap); two-shunt power stage, 5.0SMDJ60A TVS |
 | Simulation | loop inductance, double pulse, bus surge, current loop: docs/simulation.md |
 | Firmware | not started; pin map and bring-up values in docs/firmware.md |
 | Bench validation | none; loss figures are estimates |

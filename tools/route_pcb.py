@@ -60,31 +60,32 @@ def board_poly():
 
 def add_power_pours(board):
     """Local power-stage copper. Nothing of another net lies inside these, so the
-    autorouter can treat them as fixed conduction areas."""
+    autorouter can treat them as fixed conduction areas.
+
+    Layout (STEP coordinates): high-side FETs at y = -13.5, low-side FETs at y = -20.1,
+    top-side shunts for phases A and C standing in the gaps at x = -5 / +5, phase B's
+    low side returns straight to GND (two-shunt sensing)."""
     F, B, I4 = pcbnew.F_Cu, pcbnew.B_Cu, pcbnew.In4_Cu
     add_zone(board, "GND", pcbnew.In1_Cu, board_poly(), 0, name="GND plane")
-    add_zone(board, "VBUS", F, rect(-18.2, -7.3, 18.2, -12.4), 5, name="VBUS top")
+    # VBUS over the high-side drains, with notches for the two shunt gaps
+    vb = [(-18.2, -7.3), (18.2, -7.3), (18.2, -12.4), (7.1, -12.4), (7.1, -7.9), (2.9, -7.9), (2.9, -12.4),
+          (-2.9, -12.4), (-2.9, -7.9), (-7.1, -7.9), (-7.1, -12.4), (-18.2, -12.4)]
+    add_zone(board, "VBUS", F, vb, 5, name="VBUS top")
     add_zone(board, "VBUS", B, rect(-18.2, -7.3, 18.2, -10.4), 5, name="VBUS bottom")
     for ph, x0 in gen_pcb.PH_X.items():
         hole_x = {"A": -5.8, "B": 0.0, "C": 5.8}[ph]
-        s = -1 if ph == "C" else 1
+        s = -1 if ph == "A" else 1          # side of the low-side drain pad
         net = "PH" + ph
-        # HS source row -> LS drain pad -> phase-wire hole
         add_zone(board, net, F, rect(x0 - 2.4, -15.3, x0 + 1.2, -17.9), 6, name=net + " top")
         d1, d2 = sorted((x0 + s * (1.05 - 2.35), x0 + s * (1.05 + 2.35)))
-        add_zone(board, net, F, rect(d1, -17.5, d2, -22.4), 10)
-        add_zone(board, net, F, rect(min(d1, hole_x - 1.9), -22.0, max(d2, hole_x + 1.9), -27.6), 11)
-        # inner layer copper for the phase current
+        add_zone(board, net, F, rect(d1, -17.5, d2, -22.6), 10)
+        add_zone(board, net, F, rect(min(d1, hole_x - 1.9), -22.7, max(d2, hole_x + 1.9), -27.6), 11)
         lo = {"A": (-14.6, -4.6), "B": (-4.2, 4.2), "C": (4.6, 14.2)}[ph]
         add_zone(board, net, I4, rect(lo[0], -15.5, lo[1], -27.6), 6, name=net + " In4")
-        # low-side source -> shunt
-        lsn = "LS" + ph
-        if ph == "C":
-            add_zone(board, lsn, F, rect(12.45, -18.8, 14.5, -22.9), 7, name=lsn + " top")
-            add_zone(board, lsn, B, rect(10.8, -18.9, 14.45, -22.95), 7, name=lsn + " bottom")
-        else:
-            add_zone(board, lsn, F, rect(x0 - 5.6, -18.3, x0 - 2.45, -21.55), 7, name=lsn + " top")
-            add_zone(board, lsn, B, rect(x0 - 5.6, -18.3, x0 - 0.8, -21.85), 7, name=lsn + " bottom")
+    # low-side sources -> shunt pad 1 (top side, around the gate pin)
+    add_zone(board, "LSA", F, [(-7.6, -22.4), (-4.4, -22.4), (-4.4, -14.9), (-6.4, -14.9), (-6.4, -18.6),
+                               (-7.6, -18.6)], 7, name="LSA top")
+    add_zone(board, "LSC", F, rect(4.4, -21.6, 7.6, -14.9), 7, name="LSC top")
 
 
 def add_general_pours(board):
@@ -142,6 +143,10 @@ def add_via(board, net, x, y, size=0.8, drill=0.4, clear=0.2, force=False):
     if not force:
         for fp in board.GetFootprints():
             for pad in fp.Pads():
+                if pad.GetDrillSize().x > 0:  # hole-to-hole applies to every net
+                    hd = pcbnew.ToMM(int((pad.GetPosition() - p).EuclideanNorm()))
+                    if hd < pcbnew.ToMM(pad.GetDrillSize().x) / 2 + drill / 2 + 0.3:
+                        return False
                 if pad.GetNetCode() == n.GetNetCode():
                     continue
                 hv = pad.GetNetname() in HV_NETS or net in HV_NETS
@@ -210,7 +215,7 @@ def fanout(board, refs=("U4", "U5"), rows=(0.95, 1.75)):
         pads = [p for p in fp.Pads() if p.GetNumber() and p.GetNetCode()]
         ep = max(pads, key=lambda p: p.GetSize().x * p.GetSize().y)
         for pad in pads:
-            if pad is ep:
+            if pad is ep or pad.GetNetname() in ("HSE_IN", "HSE_OUT"):
                 continue
             pos = pad.GetPosition()
             dx, dy = pos.x - c.x, pos.y - c.y
@@ -268,27 +273,22 @@ def fanout_areas(board):
 def add_power_vias(board):
     placed = 0
     for ph, x0 in gen_pcb.PH_X.items():
-        # low-side source to shunt
-        pts = ([(13.95, -19.25), (13.95, -20.35), (14.0, -22.4)] if ph == "C" else
-               [(x0 - 4.0, -19.9), (x0 - 5.1, -19.9), (x0 - 4.0, -21.0), (x0 - 5.1, -21.0), (x0 - 5.1, -18.8)])
-        for (x, y) in pts:
-            placed += add_via(board, "LS" + ph, x, y)
-        # phase node to In2
-        for dx in (-1.6, -0.4, 0.8):
+        for dx in (-1.6, -0.4, 0.8):              # phase node to In4
             placed += add_via(board, "PH" + ph, x0 + dx, -17.3)
-    # VBUS stitching between the half-bridges and at the ends of the DC-link rows
-    for x in (-16.2, -15.0, -5.6, -4.4, 4.4, 5.6, 15.0, 16.2):
+    # shunt ground ends (pad 4 at y ~ -10.1) straight into the In1 plane
+    for (x, y) in ((-6.2, -11.0), (-6.2, -12.0), (3.8, -11.0), (3.8, -12.0)):
+        placed += add_via(board, "GND", x, y, 0.6, 0.3)
+    # phase B low side is GND: vias next to its source pins
+    for (x, y) in ((-2.9, -17.0), (-3.9, -23.4), (-2.9, -23.6)):
+        placed += add_via(board, "GND", x, y, 0.6, 0.3)
+    # VBUS stitching at the ends of the high-side row
+    for x in (-16.2, -15.0, -13.6, 13.6, 15.0, 16.2):
         for y in (-10.6, -11.8):
             placed += add_via(board, "VBUS", x, y)
     for k in range(12):
         x = -16.5 + 3 * k
         placed += add_via(board, "VBUS", x + 1.5, -8.6)
         placed += add_via(board, "GND", x + 1.5, -5.4)
-    # shunt ground ends to the GND plane
-    for ph, x0 in gen_pcb.PH_X.items():
-        gx = x0 - 2.48 if ph == "C" else x0 + 2.48
-        for dy in (-0.9, 0.0, 0.9):
-            placed += add_via(board, "GND", gx + (0.6 if ph != "C" else -0.6), -20.1 + dy - (0.63 if ph != "C" else -0.63))
     return placed
 
 

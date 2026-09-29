@@ -11,6 +11,7 @@ FP = dict(
     R0402="Resistor_SMD:R_0402_1005Metric",
     R0603="Resistor_SMD:R_0603_1608Metric",
     R0805="Resistor_SMD:R_0805_2012Metric",
+    R1206="Resistor_SMD:R_1206_3216Metric",
     C0402="Capacitor_SMD:C_0402_1005Metric",
     C0603="Capacitor_SMD:C_0603_1608Metric",
     C0805="Capacitor_SMD:C_0805_2012Metric",
@@ -71,8 +72,8 @@ sheet("power_input", "Power input, protection, bulk capacitance", [
          note="Power + CAN daisy-chain, MD80 position; pinout see docs/mechanical.md"),
     Part("J2", "Connector_Generic:Conn_02x03_Odd_Even", "Micro-Fit 2x3",
          MICROFIT_PINS, FP["MICROFIT"], "Molex 43045-0600 (R/A, 2x3)"),
-    Part("D1", "Device:D_Zener", "SMBJ60A", {"1": "VBUS", "2": "GND"}, "Diode_SMD:D_SMB",
-         "Littelfuse SMBJ60A", note="600 W TVS, VRWM 60 V, VC 96.8 V @ 6.2 A"),
+    Part("D1", "Device:D_Zener", "5.0SMDJ60A", {"1": "VBUS", "2": "GND"}, "Diode_SMD:D_SMC",
+         "Littelfuse 5.0SMDJ60A", note="5 kW TVS, VRWM 60 V, VC 96.8 V @ 51.6 A; sized by sim/bus_surge.py"),
 ] + [C("C%d" % (100 + k), "2.2u 100V", "VBUS", "GND", "1206", BULK_MPN,
         note="DC-link row, 12 top + 12 bottom as on MD80" if k == 0 else "") for k in range(24)] + [
     R("R1", "100k", "VBUS", "VBUS_SENSE", "0603", note="VBUS divider 20.6:1, 68 V -> 3.30 V"),
@@ -126,28 +127,36 @@ sheet("regulators", "Auxiliary supplies: 60V->12V->5V->3.3V", [
 ])
 
 # --------------------------------------------------------------------------- 3. power stage
+# Two-shunt current sensing (phases A and C, the same scheme as ODrive v3): with only two
+# shunts both fit on the top side in the gaps between the high-side FETs, which halves the
+# commutation loop (5.0 -> ~2.7 nH, sim/loop_inductance.py). Phase B's low side goes
+# straight to GND and ib = -(ia + ic).
+SHUNTED = "AC"
 stage = []
 for i, ph in enumerate("ABC"):
     n = i * 2
+    ls = "LS%s" % ph if ph in SHUNTED else "GND"
     stage += [
         Part("Q%d" % (n + 1), "Transistor_FET:Q_NMOS_SSSGD_AvalancheRated", "ISC022N10NM6",
              {"4": "GH%s_G" % ph, "5": "VBUS", "1": "PH%s" % ph, "2": "PH%s" % ph, "3": "PH%s" % ph},
              FP["FET"], "Infineon ISC022N10NM6ATMA1", note="100 V, 2.2 mOhm, SuperSO8"),
         Part("Q%d" % (n + 2), "Transistor_FET:Q_NMOS_SSSGD_AvalancheRated", "ISC022N10NM6",
-             {"4": "GL%s_G" % ph, "5": "PH%s" % ph, "1": "LS%s" % ph, "2": "LS%s" % ph, "3": "LS%s" % ph},
+             {"4": "GL%s_G" % ph, "5": "PH%s" % ph, "1": ls, "2": ls, "3": ls},
              FP["FET"], "Infineon ISC022N10NM6ATMA1"),
         R("R%d" % (20 + n), "0", "GH%s" % ph, "GH%s_G" % ph, note="Gate resistor, tune for ringing"),
         R("R%d" % (21 + n), "0", "GL%s" % ph, "GL%s_G" % ph),
-        Part("RS%d" % (i + 1), "Device:R_Shunt", "0.5m",
-             {"1": "LS%s" % ph, "4": "GND", "2": "SP%s" % ph, "3": "SN%s" % ph}, FP["SHUNT"],
-             "Vishay WSK2512 0.5 mOhm 1% (verify)", note="Kelvin 4-terminal; other series need a footprint change"),
         C("C%d" % (22 + i * 4), "100n 100V", "VBUS", "GND", "0603", "Murata GRM188R72A104KA35D",
           note="Place across HS drain / LS source"),
-        R("R%d" % (30 + i), "2.2", "PH%s" % ph, "SNUB%s" % ph, "0805", dnp=True, note="RC snubber, fit if needed"),
+        R("R%d" % (30 + i), "2.2", "PH%s" % ph, "SNUB%s" % ph, "1206", dnp=True,
+          note="RC snubber; fit on first boards (sim/double_pulse.py), 0.3 W"),
         C("C%d" % (23 + i * 4), "2.2n 100V", "SNUB%s" % ph, "GND", "0603", dnp=True),
         Part("J%d" % (10 + i), "Connector_Generic:Conn_01x01", "Phase %s" % ph, {"1": "PH%s" % ph}, FP["PHASE"],
              "", note="Motor lead solder pad"),
     ]
+    if ph in SHUNTED:
+        stage.append(Part("RS%d" % (i + 1), "Device:R_Shunt", "0.5m",
+                          {"1": "LS%s" % ph, "4": "GND", "2": "SP%s" % ph, "3": "SN%s" % ph}, FP["SHUNT"],
+                          "Vishay WSK2512 0.5 mOhm 1% (verify)", note="Kelvin 4-terminal, top side between the FETs"))
 stage += [
     Part("TH1", "Device:Thermistor_NTC", "10k NTC", {"1": "TEMP_FET", "2": "GND"}, "Resistor_SMD:R_0603_1608Metric",
          "Murata NCP18XH103F03RB", note="Place between phase B FETs"),
@@ -164,7 +173,7 @@ sheet("gate_driver", "DRV8353S gate driver and current-sense amplifiers", [
           "30": "DRV_nCS", "29": "DRV_SCK", "28": "DRV_MOSI", "27": "DRV_MISO", "26": "DRV_nFAULT",
           "39": "GND", "25": "GND", "41": "GND",
           "6": "GHA", "7": "PHA", "8": "GLA", "9": "SPA", "10": "SNA",
-          "15": "GHB", "14": "PHB", "13": "GLB", "12": "SPB", "11": "SNB",
+          "15": "GHB", "14": "PHB", "13": "GLB", "12": "GND", "11": "GND",
           "16": "GHC", "17": "PHC", "18": "GLC", "19": "SPC", "20": "SNC",
           "23": "SOA", "22": "SOB", "21": "SOC"},
          "Package_DFN_QFN:Texas_RHA0040B_VQFN-40-1EP_6x6mm_P0.5mm_EP4.15x4.15mm", "TI DRV8353SRTAR",

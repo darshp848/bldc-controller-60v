@@ -1,0 +1,38 @@
+* floor_no_shunt
+.Units mm
+.Default sigma=5.8e4
+
+NcapP x=0.000 y=-8.670 z=0.000
+NcapN x=0.000 y=-5.720 z=0.000
+NhsD x=0.000 y=-12.450 z=0.000
+NhsDu x=0.000 y=-12.450 z=0.600
+NhsSu x=0.000 y=-16.400 z=0.600
+NhsS x=0.000 y=-16.400 z=0.000
+NlsD x=1.050 y=-18.500 z=0.000
+NlsDu x=1.050 y=-19.500 z=0.600
+NlsSu x=-2.900 y=-19.500 z=0.600
+NlsS x=-2.900 y=-19.500 z=0.000
+NgVi x=-2.900 y=-19.500 z=-0.200
+NcVi x=1.500 y=-5.400 z=-0.200
+NcVt x=1.500 y=-5.400 z=0.000
+
+E0 NcapP NhsD w=6.000 h=0.070 nwinc=5 nhinc=1
+E1 NhsD NhsDu w=4.000 h=0.200 nwinc=5 nhinc=1
+E2 NhsDu NhsSu w=4.000 h=0.200 nwinc=5 nhinc=1
+E3 NhsSu NhsS w=3.000 h=0.200 nwinc=5 nhinc=1
+E4 NhsS NlsD w=3.500 h=0.070 nwinc=5 nhinc=1
+E5 NlsD NlsDu w=4.000 h=0.200 nwinc=5 nhinc=1
+E6 NlsDu NlsSu w=4.000 h=0.200 nwinc=5 nhinc=1
+E7 NlsSu NlsS w=3.000 h=0.200 nwinc=5 nhinc=1
+E8 NlsS NgVi w=1.800 h=1.800 nwinc=5 nhinc=1
+G1 x1=-12 y1=-24 z1=-0.200 x2=12 y2=-24 z2=-0.200 x3=12 y3=-3 z3=-0.200 thick=0.035 seg1=24 seg2=21
++ Nnin (-2.90,-19.50,-0.200)
++ Nnout (1.5,-5.4,-0.200)
+.equiv NgVi Nnin
+.equiv NcVi Nnout
+E12 NcVi NcVt w=0.300 h=0.300 nwinc=5 nhinc=1
+E13 NcVt NcapN w=1.000 h=0.070 nwinc=5 nhinc=1
+
+.external NcapP NcapN
+.freq fmin=1e7 fmax=1e7 ndec=1
+.end

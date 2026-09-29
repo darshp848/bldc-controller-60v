@@ -2327,7 +2327,7 @@
 			)
 		)
 	)
-	(global_label "SNB"
+	(global_label "GND"
 		(shape passive)
 		(at 76.2 59.69 0)
 		(fields_autoplaced yes)
@@ -2591,7 +2591,7 @@
 			)
 		)
 	)
-	(global_label "SPB"
+	(global_label "GND"
 		(shape passive)
 		(at 76.2 57.15 0)
 		(fields_autoplaced yes)

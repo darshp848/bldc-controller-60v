@@ -2,7 +2,7 @@
 	(version "E")
 	(design
 		(source "C:\\Users\\darsh\\Projects\\better-md80\\hardware\\better-md80.kicad_sch")
-		(date "2026-09-28T08:56:47")
+		(date "2026-09-28T23:22:42")
 		(tool "Eeschema 10.0.6")
 		(sheet
 			(number "1")
@@ -1844,16 +1844,16 @@
 		)
 		(comp
 			(ref "D1")
-			(value "SMBJ60A")
-			(footprint "Diode_SMD:D_SMB")
+			(value "5.0SMDJ60A")
+			(footprint "Diode_SMD:D_SMC")
 			(description "Zener diode")
 			(fields
 				(field
-					(name "MPN") "Littelfuse SMBJ60A")
+					(name "MPN") "Littelfuse 5.0SMDJ60A")
 				(field
-					(name "Note") "600 W TVS, VRWM 60 V, VC 96.8 V @ 6.2 A")
+					(name "Note") "5 kW TVS, VRWM 60 V, VC 96.8 V @ 51.6 A; sized by sim/bus_surge.py")
 				(field
-					(name "Footprint") "Diode_SMD:D_SMB")
+					(name "Footprint") "Diode_SMD:D_SMC")
 				(field
 					(name "Datasheet")
 				)
@@ -1867,11 +1867,11 @@
 			)
 			(property
 				(name "MPN")
-				(value "Littelfuse SMBJ60A")
+				(value "Littelfuse 5.0SMDJ60A")
 			)
 			(property
 				(name "Note")
-				(value "600 W TVS, VRWM 60 V, VC 96.8 V @ 6.2 A")
+				(value "5 kW TVS, VRWM 60 V, VC 96.8 V @ 51.6 A; sized by sim/bus_surge.py")
 			)
 			(property
 				(name "Sheetname")
@@ -5010,13 +5010,13 @@
 		(comp
 			(ref "R30")
 			(value "2.2")
-			(footprint "Resistor_SMD:R_0805_2012Metric")
+			(footprint "Resistor_SMD:R_1206_3216Metric")
 			(description "Resistor, small symbol")
 			(fields
 				(field
-					(name "Note") "RC snubber, fit if needed")
+					(name "Note") "RC snubber; fit on first boards (sim/double_pulse.py), 0.3 W")
 				(field
-					(name "Footprint") "Resistor_SMD:R_0805_2012Metric")
+					(name "Footprint") "Resistor_SMD:R_1206_3216Metric")
 				(field
 					(name "Datasheet")
 				)
@@ -5030,7 +5030,7 @@
 			)
 			(property
 				(name "Note")
-				(value "RC snubber, fit if needed")
+				(value "RC snubber; fit on first boards (sim/double_pulse.py), 0.3 W")
 			)
 			(property
 				(name "Sheetname")
@@ -5073,13 +5073,13 @@
 		(comp
 			(ref "R31")
 			(value "2.2")
-			(footprint "Resistor_SMD:R_0805_2012Metric")
+			(footprint "Resistor_SMD:R_1206_3216Metric")
 			(description "Resistor, small symbol")
 			(fields
 				(field
-					(name "Note") "RC snubber, fit if needed")
+					(name "Note") "RC snubber; fit on first boards (sim/double_pulse.py), 0.3 W")
 				(field
-					(name "Footprint") "Resistor_SMD:R_0805_2012Metric")
+					(name "Footprint") "Resistor_SMD:R_1206_3216Metric")
 				(field
 					(name "Datasheet")
 				)
@@ -5093,7 +5093,7 @@
 			)
 			(property
 				(name "Note")
-				(value "RC snubber, fit if needed")
+				(value "RC snubber; fit on first boards (sim/double_pulse.py), 0.3 W")
 			)
 			(property
 				(name "Sheetname")
@@ -5136,13 +5136,13 @@
 		(comp
 			(ref "R32")
 			(value "2.2")
-			(footprint "Resistor_SMD:R_0805_2012Metric")
+			(footprint "Resistor_SMD:R_1206_3216Metric")
 			(description "Resistor, small symbol")
 			(fields
 				(field
-					(name "Note") "RC snubber, fit if needed")
+					(name "Note") "RC snubber; fit on first boards (sim/double_pulse.py), 0.3 W")
 				(field
-					(name "Footprint") "Resistor_SMD:R_0805_2012Metric")
+					(name "Footprint") "Resistor_SMD:R_1206_3216Metric")
 				(field
 					(name "Datasheet")
 				)
@@ -5156,7 +5156,7 @@
 			)
 			(property
 				(name "Note")
-				(value "RC snubber, fit if needed")
+				(value "RC snubber; fit on first boards (sim/double_pulse.py), 0.3 W")
 			)
 			(property
 				(name "Sheetname")
@@ -5259,7 +5259,7 @@
 				(field
 					(name "MPN") "Vishay WSK2512 0.5 mOhm 1% (verify)")
 				(field
-					(name "Note") "Kelvin 4-terminal; other series need a footprint change")
+					(name "Note") "Kelvin 4-terminal, top side between the FETs")
 				(field
 					(name "Footprint") "Resistor_SMD:R_Shunt_Vishay_WSK2512_6332Metric_T2.66mm")
 				(field
@@ -5279,7 +5279,7 @@
 			)
 			(property
 				(name "Note")
-				(value "Kelvin 4-terminal; other series need a footprint change")
+				(value "Kelvin 4-terminal, top side between the FETs")
 			)
 			(property
 				(name "Sheetname")
@@ -5323,78 +5323,6 @@
 			)
 		)
 		(comp
-			(ref "RS2")
-			(value "0.5m")
-			(footprint "Resistor_SMD:R_Shunt_Vishay_WSK2512_6332Metric_T2.66mm")
-			(description "Shunt resistor with Kelvin connections")
-			(fields
-				(field
-					(name "MPN") "Vishay WSK2512 0.5 mOhm 1% (verify)")
-				(field
-					(name "Note") "Kelvin 4-terminal; other series need a footprint change")
-				(field
-					(name "Footprint") "Resistor_SMD:R_Shunt_Vishay_WSK2512_6332Metric_T2.66mm")
-				(field
-					(name "Datasheet")
-				)
-				(field
-					(name "Description") "Shunt resistor with Kelvin connections")
-			)
-			(libsource
-				(lib "Device")
-				(part "R_Shunt")
-				(description "Shunt resistor with Kelvin connections")
-			)
-			(property
-				(name "MPN")
-				(value "Vishay WSK2512 0.5 mOhm 1% (verify)")
-			)
-			(property
-				(name "Note")
-				(value "Kelvin 4-terminal; other series need a footprint change")
-			)
-			(property
-				(name "Sheetname")
-				(value "Three-phase bridge, shunts, motor pads")
-			)
-			(property
-				(name "Sheetfile")
-				(value "power_stage.kicad_sch")
-			)
-			(property
-				(name "ki_keywords")
-				(value "R res shunt resistor")
-			)
-			(property
-				(name "ki_fp_filters")
-				(value "R_*Shunt*")
-			)
-			(sheetpath
-				(names "/Three-phase bridge, shunts, motor pads/")
-				(tstamps "/ff6b1fce-46c4-570a-b2e6-d0ca4008a8e6/")
-			)
-			(tstamps "76dc6d93-f360-522c-8b45-81922800c38f")
-			(units
-				(unit
-					(name "A")
-					(pins
-						(pin
-							(num "1")
-						)
-						(pin
-							(num "4")
-						)
-						(pin
-							(num "2")
-						)
-						(pin
-							(num "3")
-						)
-					)
-				)
-			)
-		)
-		(comp
 			(ref "RS3")
 			(value "0.5m")
 			(footprint "Resistor_SMD:R_Shunt_Vishay_WSK2512_6332Metric_T2.66mm")
@@ -5403,7 +5331,7 @@
 				(field
 					(name "MPN") "Vishay WSK2512 0.5 mOhm 1% (verify)")
 				(field
-					(name "Note") "Kelvin 4-terminal; other series need a footprint change")
+					(name "Note") "Kelvin 4-terminal, top side between the FETs")
 				(field
 					(name "Footprint") "Resistor_SMD:R_Shunt_Vishay_WSK2512_6332Metric_T2.66mm")
 				(field
@@ -5423,7 +5351,7 @@
 			)
 			(property
 				(name "Note")
-				(value "Kelvin 4-terminal; other series need a footprint change")
+				(value "Kelvin 4-terminal, top side between the FETs")
 			)
 			(property
 				(name "Sheetname")
@@ -12517,6 +12445,24 @@
 				(pintype "passive")
 			)
 			(node
+				(ref "Q4")
+				(pin "1")
+				(pinfunction "S_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "Q4")
+				(pin "2")
+				(pinfunction "S_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "Q4")
+				(pin "3")
+				(pinfunction "S_3")
+				(pintype "passive")
+			)
+			(node
 				(ref "R2")
 				(pin "2")
 				(pintype "passive")
@@ -12548,11 +12494,6 @@
 			)
 			(node
 				(ref "RS1")
-				(pin "4")
-				(pintype "passive")
-			)
-			(node
-				(ref "RS2")
 				(pin "4")
 				(pintype "passive")
 			)
@@ -12607,6 +12548,18 @@
 				(pin "2")
 				(pinfunction "GND_2")
 				(pintype "power_in")
+			)
+			(node
+				(ref "U4")
+				(pin "11")
+				(pinfunction "SNB_11")
+				(pintype "input")
+			)
+			(node
+				(ref "U4")
+				(pin "12")
+				(pinfunction "SPB_12")
+				(pintype "input")
 			)
 			(node
 				(ref "U4")
@@ -12915,34 +12868,6 @@
 		)
 		(net
 			(code "59")
-			(name "LSB")
-			(class "Default")
-			(node
-				(ref "Q4")
-				(pin "1")
-				(pinfunction "S_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "Q4")
-				(pin "2")
-				(pinfunction "S_2")
-				(pintype "passive")
-			)
-			(node
-				(ref "Q4")
-				(pin "3")
-				(pinfunction "S_3")
-				(pintype "passive")
-			)
-			(node
-				(ref "RS2")
-				(pin "1")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "60")
 			(name "LSC")
 			(class "Default")
 			(node
@@ -12970,7 +12895,7 @@
 			)
 		)
 		(net
-			(code "61")
+			(code "60")
 			(name "NRST")
 			(class "Default")
 			(node
@@ -12992,7 +12917,7 @@
 			)
 		)
 		(net
-			(code "62")
+			(code "61")
 			(name "PHA")
 			(class "HV_60V")
 			(node
@@ -13038,7 +12963,7 @@
 			)
 		)
 		(net
-			(code "63")
+			(code "62")
 			(name "PHB")
 			(class "HV_60V")
 			(node
@@ -13084,7 +13009,7 @@
 			)
 		)
 		(net
-			(code "64")
+			(code "63")
 			(name "PHC")
 			(class "HV_60V")
 			(node
@@ -13130,7 +13055,7 @@
 			)
 		)
 		(net
-			(code "65")
+			(code "64")
 			(name "RIPL12")
 			(class "Default")
 			(node
@@ -13150,7 +13075,7 @@
 			)
 		)
 		(net
-			(code "66")
+			(code "65")
 			(name "RON12")
 			(class "Default")
 			(node
@@ -13166,7 +13091,7 @@
 			)
 		)
 		(net
-			(code "67")
+			(code "66")
 			(name "RS422_A")
 			(class "Default")
 			(node
@@ -13188,7 +13113,7 @@
 			)
 		)
 		(net
-			(code "68")
+			(code "67")
 			(name "RS422_B")
 			(class "Default")
 			(node
@@ -13210,7 +13135,7 @@
 			)
 		)
 		(net
-			(code "69")
+			(code "68")
 			(name "RS422_RX")
 			(class "Default")
 			(node
@@ -13227,7 +13152,7 @@
 			)
 		)
 		(net
-			(code "70")
+			(code "69")
 			(name "RS422_TX")
 			(class "Default")
 			(node
@@ -13244,7 +13169,7 @@
 			)
 		)
 		(net
-			(code "71")
+			(code "70")
 			(name "RS422_Y")
 			(class "Default")
 			(node
@@ -13261,7 +13186,7 @@
 			)
 		)
 		(net
-			(code "72")
+			(code "71")
 			(name "RS422_Z")
 			(class "Default")
 			(node
@@ -13278,7 +13203,7 @@
 			)
 		)
 		(net
-			(code "73")
+			(code "72")
 			(name "SNA")
 			(class "Default")
 			(node
@@ -13294,23 +13219,7 @@
 			)
 		)
 		(net
-			(code "74")
-			(name "SNB")
-			(class "Default")
-			(node
-				(ref "RS2")
-				(pin "3")
-				(pintype "passive")
-			)
-			(node
-				(ref "U4")
-				(pin "11")
-				(pinfunction "SNB_11")
-				(pintype "input")
-			)
-		)
-		(net
-			(code "75")
+			(code "73")
 			(name "SNC")
 			(class "Default")
 			(node
@@ -13326,7 +13235,7 @@
 			)
 		)
 		(net
-			(code "76")
+			(code "74")
 			(name "SNUBA")
 			(class "HV_60V")
 			(node
@@ -13341,7 +13250,7 @@
 			)
 		)
 		(net
-			(code "77")
+			(code "75")
 			(name "SNUBB")
 			(class "HV_60V")
 			(node
@@ -13356,7 +13265,7 @@
 			)
 		)
 		(net
-			(code "78")
+			(code "76")
 			(name "SNUBC")
 			(class "HV_60V")
 			(node
@@ -13371,7 +13280,7 @@
 			)
 		)
 		(net
-			(code "79")
+			(code "77")
 			(name "SOA")
 			(class "Default")
 			(node
@@ -13393,7 +13302,7 @@
 			)
 		)
 		(net
-			(code "80")
+			(code "78")
 			(name "SOB")
 			(class "Default")
 			(node
@@ -13415,7 +13324,7 @@
 			)
 		)
 		(net
-			(code "81")
+			(code "79")
 			(name "SOC")
 			(class "Default")
 			(node
@@ -13437,7 +13346,7 @@
 			)
 		)
 		(net
-			(code "82")
+			(code "80")
 			(name "SPA")
 			(class "Default")
 			(node
@@ -13453,23 +13362,7 @@
 			)
 		)
 		(net
-			(code "83")
-			(name "SPB")
-			(class "Default")
-			(node
-				(ref "RS2")
-				(pin "2")
-				(pintype "passive")
-			)
-			(node
-				(ref "U4")
-				(pin "12")
-				(pinfunction "SPB_12")
-				(pintype "input")
-			)
-		)
-		(net
-			(code "84")
+			(code "81")
 			(name "SPC")
 			(class "Default")
 			(node
@@ -13485,7 +13378,7 @@
 			)
 		)
 		(net
-			(code "85")
+			(code "82")
 			(name "SPI3_MISO")
 			(class "Default")
 			(node
@@ -13507,7 +13400,7 @@
 			)
 		)
 		(net
-			(code "86")
+			(code "83")
 			(name "SPI3_MOSI")
 			(class "Default")
 			(node
@@ -13529,7 +13422,7 @@
 			)
 		)
 		(net
-			(code "87")
+			(code "84")
 			(name "SPI3_SCK")
 			(class "Default")
 			(node
@@ -13551,7 +13444,7 @@
 			)
 		)
 		(net
-			(code "88")
+			(code "85")
 			(name "SW5")
 			(class "Default")
 			(node
@@ -13568,7 +13461,7 @@
 			)
 		)
 		(net
-			(code "89")
+			(code "86")
 			(name "SW12")
 			(class "HV_60V")
 			(node
@@ -13595,7 +13488,7 @@
 			)
 		)
 		(net
-			(code "90")
+			(code "87")
 			(name "SWCLK")
 			(class "Default")
 			(node
@@ -13612,7 +13505,7 @@
 			)
 		)
 		(net
-			(code "91")
+			(code "88")
 			(name "SWDIO")
 			(class "Default")
 			(node
@@ -13629,7 +13522,7 @@
 			)
 		)
 		(net
-			(code "92")
+			(code "89")
 			(name "TEMP_FET")
 			(class "Default")
 			(node
@@ -13655,7 +13548,7 @@
 			)
 		)
 		(net
-			(code "93")
+			(code "90")
 			(name "TEMP_MOTOR")
 			(class "Default")
 			(node
@@ -13676,7 +13569,7 @@
 			)
 		)
 		(net
-			(code "94")
+			(code "91")
 			(name "TEMP_MOTOR_C")
 			(class "Default")
 			(node
@@ -13697,7 +13590,7 @@
 			)
 		)
 		(net
-			(code "95")
+			(code "92")
 			(name "TERM_LED")
 			(class "Default")
 			(node
@@ -13712,7 +13605,7 @@
 			)
 		)
 		(net
-			(code "96")
+			(code "93")
 			(name "TERM_MID")
 			(class "Default")
 			(node
@@ -13727,7 +13620,7 @@
 			)
 		)
 		(net
-			(code "97")
+			(code "94")
 			(name "UVLO12")
 			(class "Default")
 			(node
@@ -13748,7 +13641,7 @@
 			)
 		)
 		(net
-			(code "98")
+			(code "95")
 			(name "VBUS")
 			(class "HV_60V")
 			(node
@@ -13978,7 +13871,7 @@
 			)
 		)
 		(net
-			(code "99")
+			(code "96")
 			(name "VBUS_SENSE")
 			(class "Default")
 			(node
@@ -14004,7 +13897,7 @@
 			)
 		)
 		(net
-			(code "100")
+			(code "97")
 			(name "VCP")
 			(class "HV_60V")
 			(node
@@ -14020,7 +13913,7 @@
 			)
 		)
 		(net
-			(code "101")
+			(code "98")
 			(name "VGLS")
 			(class "Default")
 			(node
@@ -14036,7 +13929,7 @@
 			)
 		)
 		(net
-			(code "102")
+			(code "99")
 			(name "unconnected-(J6-SWO-Pad6)")
 			(class "Default")
 			(node
@@ -14047,7 +13940,7 @@
 			)
 		)
 		(net
-			(code "103")
+			(code "100")
 			(name "unconnected-(U1-PGOOD-Pad6)")
 			(class "Default")
 			(node
@@ -14058,7 +13951,7 @@
 			)
 		)
 		(net
-			(code "104")
+			(code "101")
 			(name "unconnected-(U2-PG-Pad8)")
 			(class "Default")
 			(node
@@ -14069,7 +13962,7 @@
 			)
 		)
 		(net
-			(code "105")
+			(code "102")
 			(name "unconnected-(U3-NC-Pad4)")
 			(class "Default")
 			(node
@@ -14080,7 +13973,7 @@
 			)
 		)
 		(net
-			(code "106")
+			(code "103")
 			(name "unconnected-(U5-PB2-Pad19)")
 			(class "Default")
 			(node
@@ -14091,7 +13984,7 @@
 			)
 		)
 		(net
-			(code "107")
+			(code "104")
 			(name "unconnected-(U5-PC4-Pad16)")
 			(class "Default")
 			(node
@@ -14102,7 +13995,7 @@
 			)
 		)
 		(net
-			(code "108")
+			(code "105")
 			(name "unconnected-(U5-PC14-Pad3)")
 			(class "Default")
 			(node
@@ -14113,7 +14006,7 @@
 			)
 		)
 		(net
-			(code "109")
+			(code "106")
 			(name "unconnected-(U5-PC15-Pad4)")
 			(class "Default")
 			(node
@@ -14124,7 +14017,7 @@
 			)
 		)
 		(net
-			(code "110")
+			(code "107")
 			(name "unconnected-(U7-A-Pad7)")
 			(class "Default")
 			(node
@@ -14135,7 +14028,7 @@
 			)
 		)
 		(net
-			(code "111")
+			(code "108")
 			(name "unconnected-(U7-B-Pad6)")
 			(class "Default")
 			(node
@@ -14146,7 +14039,7 @@
 			)
 		)
 		(net
-			(code "112")
+			(code "109")
 			(name "unconnected-(U7-I{slash}PWM-Pad14)")
 			(class "Default")
 			(node
@@ -14157,7 +14050,7 @@
 			)
 		)
 		(net
-			(code "113")
+			(code "110")
 			(name "unconnected-(U7-U-Pad10)")
 			(class "Default")
 			(node
@@ -14168,7 +14061,7 @@
 			)
 		)
 		(net
-			(code "114")
+			(code "111")
 			(name "unconnected-(U7-V-Pad9)")
 			(class "Default")
 			(node
@@ -14179,7 +14072,7 @@
 			)
 		)
 		(net
-			(code "115")
+			(code "112")
 			(name "unconnected-(U7-W{slash}PWM-Pad8)")
 			(class "Default")
 			(node

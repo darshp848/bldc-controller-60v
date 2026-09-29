@@ -1,0 +1,2 @@
+rev B phase A (top-side shunt): L=2.96 nH at 10 MHz
+rev B phase B (no shunt, straight to GND): L=2.70 nH at 10 MHz

@@ -3220,7 +3220,7 @@
 				)
 			)
 		)
-		(property "Value" "SMBJ60A"
+		(property "Value" "5.0SMDJ60A"
 			(at 106.68 36.83 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3230,7 +3230,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_SMB"
+		(property "Footprint" "Diode_SMD:D_SMC"
 			(at 106.68 34.29 0)
 			(hide yes)
 			(show_name no)
@@ -3263,7 +3263,7 @@
 				)
 			)
 		)
-		(property "MPN" "Littelfuse SMBJ60A"
+		(property "MPN" "Littelfuse 5.0SMDJ60A"
 			(at 106.68 34.29 0)
 			(hide yes)
 			(show_name no)
@@ -3274,7 +3274,7 @@
 				)
 			)
 		)
-		(property "Note" "600 W TVS, VRWM 60 V, VC 96.8 V @ 6.2 A"
+		(property "Note" "5 kW TVS, VRWM 60 V, VC 96.8 V @ 51.6 A; sized by sim/bus_surge.py"
 			(at 106.68 34.29 0)
 			(hide yes)
 			(show_name no)
