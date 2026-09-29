@@ -95,7 +95,9 @@ def add_general_pours(board):
     add_zone(board, "GND", B, full, 0, solid=False, name="GND bottom")
     for L, nm in ((pcbnew.In2_Cu, "In2"), (pcbnew.In3_Cu, "In3"), (pcbnew.In4_Cu, "In4")):
         add_zone(board, "GND", L, full, 0, solid=True, name="GND %s fill" % nm)
-    add_zone(board, "VBUS", pcbnew.In4_Cu, [(-30, 5.6), (-16.6, 5.6), (-16.6, -3.4), (19.5, -3.4), (19.5, -15.1),
+    # VBUS plane: Micro-Fit strip, the TVS D1, and the power stage
+    add_zone(board, "VBUS", pcbnew.In4_Cu, [(-30, 5.6), (-16.6, 5.6), (-16.6, -0.3), (-12.8, -0.3), (-12.8, -3.4),
+                                            (19.5, -3.4), (19.5, -15.1),
                                  (-30, -15.1)], 5, name="VBUS plane")
 
 
@@ -313,8 +315,22 @@ def prune_stitching(board):
     return removed
 
 
+def tvs_vias(board):
+    """Tie the input TVS straight into the VBUS plane and the GND plane."""
+    d1 = board.FindFootprintByReference("D1")
+    n = 0
+    for p in d1.Pads():
+        c = p.GetPosition()
+        x, y = pcbnew.ToMM(c.x) - gen_pcb.OX, gen_pcb.OY - pcbnew.ToMM(c.y)
+        for dx, dy in ((-1.6, 0), (1.6, 0), (0, -1.6), (0, 1.6), (-1.6, -1.2), (1.6, 1.2)):
+            n += add_via(board, p.GetNetname(), x + dx, y + dy, 0.6, 0.3, 0.2)
+    print("TVS plane vias:", n)
+
+
 def stitch_gnd(board, pitch=2.5):
     """Sprinkle GND vias over the board wherever there is room (plane stitching)."""
+    global VIAS_NOW
+    VIAS_NOW = [t for t in board.GetTracks() if t.Type() == pcbnew.PCB_VIA_T]
     n = 0
     for iy in range(-12, 13):
         for ix in range(-12, 13):
@@ -324,6 +340,9 @@ def stitch_gnd(board, pitch=2.5):
             if math.hypot(x, y) < 3.5:           # keep clear under the encoder
                 continue
             if x < -23.5:                        # Micro-Fit strip: pours there are islands
+                continue
+            if any(t.Type() == pcbnew.PCB_VIA_T and (t.GetPosition() - kc(x, y)).EuclideanNorm() < MM(0.9)
+                   for t in VIAS_NOW):
                 continue
             if add_via(board, "GND", x, y, 0.6, 0.3, 0.25):
                 STITCHED.append(list(board.GetTracks())[-1])
@@ -445,6 +464,7 @@ def main():
     elif stage == "final":
         fanout_areas(board)
         add_general_pours(board)
+        tvs_vias(board)
         print("GND stitching vias", stitch_gnd(board))
         fill(board)
         print("isolated stitching vias removed", prune_stitching(board))

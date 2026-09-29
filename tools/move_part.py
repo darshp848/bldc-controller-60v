@@ -10,6 +10,7 @@ import pcbnew
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import hand_route as H  # noqa: E402
+import gen_pcb  # noqa: E402
 
 MM = pcbnew.FromMM
 
@@ -44,7 +45,7 @@ def main():
                 fp.SetOrientationDegrees(rot)
                 fp.SetPosition(pcbnew.VECTOR2I(MM(x), MM(y)))
                 ok = True
-                for p in fp.Pads():
+                for p in ([] if "--ignore-tracks" in sys.argv else fp.Pads()):
                     sh = pcbnew.SHAPE_POLY_SET()
                     p.TransformShapeToPolygon(sh, layer, 0, MM(0.01), pcbnew.ERROR_INSIDE)
                     t = pcbnew.SHAPE_POLY_SET(sh)
@@ -53,9 +54,39 @@ def main():
                         ok = False
                         break
                 if ok:
+                    bb = fp.GetCourtyard(cyl).BBox()
+                    for (kx, ky) in ((bb.GetLeft(), bb.GetTop()), (bb.GetRight(), bb.GetTop()),
+                                     (bb.GetLeft(), bb.GetBottom()), (bb.GetRight(), bb.GetBottom())):
+                        sx, sy = pcbnew.ToMM(kx) - gen_pcb.OX, gen_pcb.OY - pcbnew.ToMM(ky)
+                        if not gen_pcb.inside(sx, sy) or gen_pcb.edge_dist(sx, sy) < 0.3:
+                            ok = False
+                if ok:
                     c = pcbnew.SHAPE_POLY_SET(fp.GetCourtyard(cyl))
                     c.BooleanIntersection(crt)
                     ok = c.OutlineCount() == 0
+                if ok and "--ignore-tracks" in sys.argv:
+                    # rip other-net copper under the new pads; hand_route.py reconnects it
+                    shapes = []
+                    for p in fp.Pads():
+                        sh = pcbnew.SHAPE_POLY_SET()
+                        p.TransformShapeToPolygon(sh, layer, MM(0.25), MM(0.01), pcbnew.ERROR_INSIDE)
+                        shapes.append((p.GetNetCode(), sh))
+                    doomed = []
+                    for t in list(board.GetTracks()):
+                        for nc, sh in shapes:
+                            if t.GetNetCode() == nc:
+                                continue
+                            ts = pcbnew.SHAPE_POLY_SET()
+                            t.TransformShapeToPolygon(ts, layer if t.Type() != pcbnew.PCB_VIA_T else layer, 0, MM(0.01),
+                                                      pcbnew.ERROR_INSIDE)
+                            if t.IsOnLayer(layer):
+                                ts.BooleanIntersection(sh)
+                                if ts.OutlineCount():
+                                    doomed.append(t)
+                                    break
+                    for t in doomed:
+                        board.Remove(t)
+                    print("ripped", len(doomed), "tracks/vias under", ref)
                 if ok:
                     board.Save(sys.argv[1])
                     print("moved", ref, "to %.2f %.2f rot %d" % (x, y, rot))
