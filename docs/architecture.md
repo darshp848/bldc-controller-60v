@@ -1,4 +1,4 @@
-# better-md80: architecture and component selection
+# Architecture and component selection
 
 A drop-in replacement for the MAB Robotics MD80 v3.0 BLDC controller that runs from a
 **48 V nominal bus (60 V maximum)** while keeping the MD80's board outline, mounting,
@@ -6,7 +6,7 @@ connectors, encoder position and its **20 A continuous / 80 A peak** phase curre
 
 ## Target specification
 
-| Parameter | MD80 v3.0 | MD80 v3.0 60 V (MAB) | better-md80 |
+| Parameter | MD80 v3.0 | MD80 v3.0 60 V (MAB) | This design |
 |---|---|---|---|
 | Nominal input | 24-42 V | 48 V | 48 V (12S-13S Li-ion) |
 | Operating range | 10-48 V | 12-60 V | 12-60 V |
@@ -42,7 +42,7 @@ photos and the STEP model rather than read from a schematic:
 
 ## What this design changes
 
-| Function | better-md80 part | Rating | Why |
+| Function | Part used here | Rating | Why |
 |---|---|---|---|
 | Gate driver + CSA | TI **DRV8353SRTAR** (WQFN-40 6x6) | VDRAIN 100 V (102 V abs), VM 9-75 V | 100 V class, SPI-programmable IDRIVE, 3 low-side CSAs (gain 5/10/20/40), VDS and VGS monitoring |
 | MOSFETs (x6) | Infineon **ISC022N10NM6ATMA1** (SuperSO8 5x6) | 100 V, 2.24 mOhm max @ 10 V | Lowest R_DS(on) 100 V part in the MD80's 5x6 footprint; this is what keeps 80 A peak |

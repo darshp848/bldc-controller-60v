@@ -1,4 +1,4 @@
-# better-md80
+# bldc-controller-60v
 
 A 48 V nominal / 60 V max BLDC motor controller that fits wherever a MAB Robotics MD80 v3.0
 fits: same outline, mounting holes, Micro-Fit and AUX connectors, phase-wire holes and
@@ -49,3 +49,5 @@ Schematic changes reach the board through KiCad's Update PCB from Schematic as u
 
 `tools/analyze_step.py` needs Python with CadQuery; everything else uses KiCad 10's
 `kicad-cli` and bundled Python.
+
+The KiCad files keep their original `better-md80` working name.
